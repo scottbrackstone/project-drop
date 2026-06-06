@@ -40,7 +40,7 @@ export function ProjectOutputsContent({
     setHistoryPreview({ title: output.title, content: output.content, mode: output.mode, scope: output.scope });
   }, []);
 
-  const displayPreview = preview ?? historyPreview;
+  const displayPreview = generating ? preview : (preview ?? historyPreview);
 
   return (
     <ScrollView className="flex-1" contentContainerClassName="gap-4 pb-8">

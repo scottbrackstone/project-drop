@@ -30,11 +30,11 @@ export function OutputGeneratorPanel({
     <SectionCard title={COPY.outputs.generatorTitle}>
       <View className="gap-2">
         <Text className="text-sm font-medium text-neutral-700">{COPY.outputs.modeLabel}</Text>
-        <OutputModePicker value={mode} onChange={onModeChange} />
+        <OutputModePicker value={mode} onChange={onModeChange} disabled={generating} />
       </View>
       <View className="gap-2">
         <Text className="text-sm font-medium text-neutral-700">{COPY.outputs.scopeLabel}</Text>
-        <OutputScopePicker value={scope} onChange={onScopeChange} />
+        <OutputScopePicker value={scope} onChange={onScopeChange} disabled={generating} />
       </View>
       {error ? <Text className="text-sm text-red-600">{error}</Text> : null}
       <Button

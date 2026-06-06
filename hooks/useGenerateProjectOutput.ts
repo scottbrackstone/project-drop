@@ -35,11 +35,11 @@ export function useGenerateProjectOutput(
 
       setGenerating(true);
       setError(null);
+      setPreview(null);
 
       try {
         const context = await assembleProjectContext(projectId, scope);
         const generated = await generateProjectOutput(context, mode);
-        setPreview(generated);
 
         const saved = await createProjectOutput({
           projectId,
@@ -49,6 +49,7 @@ export function useGenerateProjectOutput(
           scope: generated.scope,
         });
 
+        setPreview(generated);
         await onSavedRef.current?.(saved);
         return saved;
       } catch (err) {

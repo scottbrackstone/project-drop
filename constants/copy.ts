@@ -53,6 +53,8 @@ export const COPY = {
     title: 'Delete project?',
     message: (projectName: string) =>
       `Delete "${projectName}"? This permanently removes all notes, tasks, decisions, tags, and outputs. This cannot be undone.`,
+    sectionDescription:
+      'Permanently removes this project and all notes, tasks, decisions, tags, and saved outputs.',
     confirm: 'Delete project',
     sectionTitle: 'Danger zone',
     button: 'Delete project',
@@ -89,7 +91,7 @@ export const COPY = {
   voice: {
     title: 'Voice note',
     description:
-      'Record on your device. Audio stays local for now — add a typed note below to save project memory.',
+      'Record on your device, transcribe when ready, then save the transcript to your project.',
     startRecording: 'Start recording',
     stopRecording: 'Stop recording',
     discardRecording: 'Discard',

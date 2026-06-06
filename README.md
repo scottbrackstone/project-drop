@@ -245,8 +245,89 @@ supabase db push
 - **Stage 5A:** Project outputs — mock formatters, mode/scope selection, reports persistence
 - **Stage 5B:** Cleanup actions — complete task, delete note, delete project
 - **Stage 5C:** DeepSeek-powered project outputs via Edge Function
-- **Stage 5D (current):** DeepSeek output guardrails — size limits, rate limits, structured errors
-- **Stage 6:** Polish, tests, error handling
+- **Stage 5D:** DeepSeek output guardrails — size limits, rate limits, structured errors
+- **Stage 6A (current):** MVP polish, web feasibility audit, deployment readiness
+- **Stage 6+:** Auth, production hardening, dedicated web deployment (if needed)
+
+## Stage 6A — MVP polish and deployment readiness
+
+**Primary target:** Android (physical device or emulator). **Web is secondary** until dynamic routing and voice are addressed.
+
+### MVP caveats
+
+- No user auth yet — anonymous access with open RLS (`mvp_allow_all_*`)
+- Edge Functions use `verify_jwt = false` for MVP
+- Output rate limits are fingerprint/IP based (not per-user)
+- Mock mode resets in-memory data on app restart
+- Web export works for static routes; **project detail URLs do not survive direct refresh** on static hosting (see Web/Vercel below)
+- Voice recording/transcription behaviour on web may differ from Android
+
+### Android daily-use test flow
+
+1. `npx expo start --clear` → open on Android (Expo Go or dev build).
+2. Home → **View projects** → **Create project**.
+3. Add text notes (include task/decision phrases) and voice notes (record → transcribe → save).
+4. Confirm open tasks, note timeline, and tags update.
+5. **Project outputs** → generate all four modes → confirm preview, history, and errors (rate limit / too large if tested).
+6. Complete a task, delete a note (confirm/cancel), delete a project (confirm).
+7. Force-quit and reopen → Supabase data persists (mock mode resets).
+
+### Web / Vercel feasibility
+
+`npx expo export --platform web` **succeeds**. Static routes exported:
+
+| Route | Direct load (static host) |
+|---|---|
+| `/` | Works |
+| `/projects` | Works |
+| `/projects/new` | Works |
+| `/projects/[real-uuid]` | **404** on static hosting (e.g. `serve`, default Vercel static) |
+| `/projects/[real-uuid]/outputs` | **404** on static hosting |
+
+Client-side navigation from the in-app projects list can reach detail screens, but **bookmarking, sharing, or refreshing** a real project URL will fail without rewrites or SSR.
+
+**Recommendation:** Do **not** deploy to Vercel as a static export yet. Options for a later web stage:
+
+1. **Expo SSR / server output** instead of `web.output: "static"`, or
+2. **Vercel rewrites** mapping `/projects/:id` → `/projects/[projectId].html` (and outputs similarly), accepting placeholder HTML shells, or
+3. **Android-first** — ship internal APK; revisit web when auth and routing are planned.
+
+Local web smoke test:
+
+```bash
+npx expo export --platform web
+npx serve dist
+```
+
+Voice recording and microphone permissions on web browsers are untested for MVP — treat as best-effort.
+
+### EAS internal Android build recommendation
+
+**Option B — set up EAS internal distribution** when you want a standalone APK on your phone without Expo Go session limits.
+
+Current gaps (not blockers for Expo Go):
+
+- No `eas.json`
+- No `android.package` in `app.json`
+- No EAS project linked
+
+Expo Go remains fine for day-to-day MVP testing. Move to EAS internal when you want install-from-URL testing with your real `.env` baked into a preview build.
+
+**Suggested next prompt (do not run until asked):**
+
+> Set up EAS internal Android distribution for ProjectDrop: add `eas.json` with a `preview` profile (APK, internal distribution), set `android.package` in `app.json`, run `eas build:configure`, and document the exact `eas build` / install steps. Do not submit to Play Store.
+
+### Stage 6A manual test checklist
+
+1. Output generation shows loading state; mode/scope pickers disable while generating.
+2. Failed output (rate limit, too large, provider error) shows a clear message and **does not** appear in history.
+3. Successful output appears in preview and history after save completes.
+4. Transcription button shows loading; errors display; save works after transcript is filled.
+5. Save note button disabled while processing or transcribing.
+6. Complete task / delete note / delete project buttons disable while submitting.
+7. Delete project: section shows summary; confirm dialog shows full destructive message.
+8. Create project button disabled when name is empty.
+9. `npm run typecheck` and `npx expo export --platform android` pass.
 
 ## Stage 4D manual test checklist
 

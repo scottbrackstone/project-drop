@@ -110,7 +110,7 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
         title={submitting ? COPY.projectDetail.captureProcessing : COPY.projectDetail.captureButton}
         onPress={() => void handleSubmit()}
         loading={submitting}
-        disabled={!transcript.trim() || transcription.transcribing}
+        disabled={!transcript.trim() || submitting || transcription.transcribing}
       />
     </View>
   );

@@ -19,9 +19,8 @@ export function ProjectDeleteSection({
 }: ProjectDeleteSectionProps) {
   return (
     <SectionCard title={COPY.deleteProject.sectionTitle}>
-      <Text className="text-sm text-neutral-600">
-        {COPY.deleteProject.message(projectName)}
-      </Text>
+      <Text className="text-sm text-neutral-600">{COPY.deleteProject.sectionDescription}</Text>
+      <Text className="text-sm font-medium text-neutral-800">{projectName}</Text>
       {error ? <Text className="text-sm text-red-600">{error}</Text> : null}
       <View>
         <Button

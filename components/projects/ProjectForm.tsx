@@ -51,6 +51,7 @@ export function ProjectForm({ onSubmit }: ProjectFormProps) {
         title={COPY.projectForm.submit}
         onPress={() => void handleSubmit()}
         loading={loading}
+        disabled={loading || !name.trim()}
       />
     </View>
   );
