@@ -100,7 +100,8 @@ lib/data/mock/       Mock persistence
 lib/data/supabase/   Supabase queries
 lib/supabase/        Client setup and auth helpers
 lib/transcription/   Audio URI → transcript (mock now; Edge Functions later)
-lib/ai/              Transcript text → structured project memory
+lib/ai/              Transcript text → structured project memory; project output formatters
+components/outputs/  Project output generator UI
 lib/audio/           Local recording and playback
 lib/utils/           Pure helpers
 types/               Shared TypeScript types
@@ -139,6 +140,44 @@ ProjectDrop splits voice capture into two layers:
 
 MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **Replace these with `auth.uid()` policies before launching with real users.**
 
+## Project outputs (Stage 5A)
+
+Generate formatted views from existing project notes, tasks, and decisions.
+
+**Output modes (mock formatters — no real LLM yet):**
+
+| Mode | Purpose |
+|---|---|
+| Project snapshot | Overview of notes, open tasks, and decisions |
+| Next actions | Open tasks plus action phrases from notes |
+| Decisions log | Saved decisions plus decision phrases from notes |
+| Meeting update | Short stakeholder-style summary |
+
+**Scope options:**
+
+| Scope | Behaviour |
+|---|---|
+| Full project | All notes, open tasks, and decisions |
+| Since last output | Items created after the latest saved output (falls back to full project with a hint if none exist) |
+| Last 7 days | Items from the past seven days |
+
+Flow: project detail → **Project outputs** → pick mode + scope → **Generate output** → preview appears → output auto-saves to the `reports` table → appears in recent outputs.
+
+Real LLM output generation is deferred to a later stage (`generate-project-output` Edge Function).
+
+### Reports migration
+
+Apply [`supabase/migrations/20250606140000_project_outputs.sql`](supabase/migrations/20250606140000_project_outputs.sql) to extend `reports` with:
+
+- `mode` — output mode (`snapshot`, `next_actions`, `decisions_log`, `meeting_update`)
+- `scope` — scope used (`full`, `since_last_output`, `last_7_days`)
+- `scope_from` / `scope_to` — reserved for custom date ranges (null in 5A)
+
+```bash
+supabase db push
+# or run the SQL in the Supabase SQL editor
+```
+
 ## MVP stages
 
 - **Stage 1–2:** App shell, projects create/list/detail, Supabase schema
@@ -146,8 +185,10 @@ MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **
 - **Stage 4A:** Local voice recording on project detail
 - **Stage 4B:** Manual voice transcript + local audio metadata
 - **Stage 4C:** Transcription provider abstraction + mock transcript button
-- **Stage 4D (current):** Remote transcription via Supabase Storage + Edge Function
-- **Stage 5:** Project summary/report
+- **Stage 4D:** Remote transcription via Supabase Storage + Edge Function
+- **Stage 5A (current):** Project outputs — mock formatters, mode/scope selection, reports persistence
+- **Stage 5B:** Delete note/project/task
+- **Stage 5C:** Real LLM output generation via Edge Function
 - **Stage 6:** Polish, tests, error handling
 
 ## Stage 4D manual test checklist
@@ -168,6 +209,29 @@ MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **
 4. Temporarily remove `MISTRAL_API_KEY` secret → tap transcribe → clear error shown (no mock fallback).
 5. Confirm no `MISTRAL_API_KEY` or `OPENAI_API_KEY` in client code or `EXPO_PUBLIC_*` env vars.
 6. Optional: set `TRANSCRIPTION_PROVIDER=openai` and `OPENAI_API_KEY` to verify legacy provider path.
+
+## Stage 5A manual test checklist
+
+### Mock mode
+
+1. Create/open a project.
+2. Add 2–3 notes (include at least one task phrase and one decision phrase — see Stage 3 test note below).
+3. Tap **Project outputs** on project detail.
+4. Generate **Project snapshot** with **Full project** → preview appears → entry in recent outputs.
+5. Generate **Next actions** → open tasks appear.
+6. Generate **Decisions log** → saved decisions appear.
+7. Generate **Meeting update** → stakeholder-style summary.
+8. Generate a second output, then test **Since last output**.
+9. Test **Last 7 days**.
+10. Open an empty project → generate → graceful empty message, no crash.
+11. Confirm text notes and voice transcription still work.
+
+### Supabase mode
+
+1. Apply `20250606140000_project_outputs.sql`.
+2. Repeat the flows above.
+3. Verify `reports` rows in Table Editor: `mode`, `scope`, `title`, `content`.
+4. Force-quit and reopen → outputs persist.
 
 ## Manual test checklist
 

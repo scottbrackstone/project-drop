@@ -22,8 +22,3 @@ export interface TranscriptionResult {
   transcript: string;
   source: TranscriptionSource;
 }
-
-export interface ProjectSummaryResult {
-  title: string;
-  content: string;
-}

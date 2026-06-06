@@ -3,6 +3,17 @@ import { toAppError } from '@/lib/utils/errors';
 import type { Decision, DecisionRow } from '@/types/decision';
 import { mapDecisionRow } from '@/types/decision';
 
+export async function supabaseListDecisionsByProject(projectId: string): Promise<Decision[]> {
+  const { data, error } = await getSupabaseClient()
+    .from('decisions')
+    .select('*')
+    .eq('project_id', projectId)
+    .order('created_at', { ascending: false });
+
+  if (error) throw toAppError(error);
+  return (data as DecisionRow[]).map(mapDecisionRow);
+}
+
 export async function supabaseInsertDecisions(
   projectId: string,
   noteId: string,

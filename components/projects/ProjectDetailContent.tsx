@@ -2,7 +2,7 @@ import { ScrollView, View } from 'react-native';
 
 import { ProjectCaptureSection } from '@/components/projects/ProjectCaptureSection';
 import { ProjectNotesSection } from '@/components/projects/ProjectNotesSection';
-import { ProjectSummaryAction } from '@/components/projects/ProjectSummaryAction';
+import { ProjectOutputsAction } from '@/components/projects/ProjectOutputsAction';
 import { ProjectTasksSection } from '@/components/projects/ProjectTasksSection';
 import { Badge } from '@/components/ui/Badge';
 import type { CreateTextNoteOptions, NoteWithTags } from '@/types/note';
@@ -43,7 +43,7 @@ export function ProjectDetailContent({
       />
       <ProjectTasksSection tasks={tasks} loading={tasksLoading} />
       <ProjectNotesSection notes={notes} loading={notesLoading} />
-      <ProjectSummaryAction />
+      <ProjectOutputsAction projectId={project.id} />
     </ScrollView>
   );
 }

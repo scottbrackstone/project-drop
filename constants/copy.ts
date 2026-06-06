@@ -39,8 +39,34 @@ export const COPY = {
     notesEmpty: 'No notes yet. Add one above.',
     notesLoading: 'Loading notes…',
     tasksLoading: 'Loading tasks…',
-    summariseButton: 'Summarise project',
+    projectOutputsButton: 'Project outputs',
     textDivider: 'Or type a note',
+  },
+  outputs: {
+    title: 'Project outputs',
+    subtitle: 'Generate formatted views from your project memory',
+    generatorTitle: 'Generate output',
+    modeLabel: 'Output mode',
+    scopeLabel: 'Scope',
+    generateButton: 'Generate output',
+    generating: 'Generating output…',
+    previewTitle: 'Preview',
+    historyTitle: 'Recent outputs',
+    historyEmpty: 'No outputs yet. Generate one above.',
+    historyLoading: 'Loading outputs…',
+    scopeFallbackHint: 'No previous output — using full project.',
+    loadErrorTitle: 'Could not load project',
+    modes: {
+      snapshot: 'Project snapshot',
+      next_actions: 'Next actions',
+      decisions_log: 'Decisions log',
+      meeting_update: 'Meeting update',
+    },
+    scopes: {
+      full: 'Full project',
+      since_last_output: 'Since last output',
+      last_7_days: 'Last 7 days',
+    },
   },
   voice: {
     title: 'Voice note',
@@ -91,4 +117,16 @@ export function formatDataModeLabel(provider: 'mock' | 'supabase'): string {
 
 export function formatPlaybackTime(current: string): string {
   return `Playback: ${current}`;
+}
+
+export function getOutputModeLabel(mode: keyof typeof COPY.outputs.modes): string {
+  return COPY.outputs.modes[mode];
+}
+
+export function getOutputScopeLabel(scope: keyof typeof COPY.outputs.scopes): string {
+  return COPY.outputs.scopes[scope];
+}
+
+export function getScopeFallbackHint(): string {
+  return COPY.outputs.scopeFallbackHint;
 }

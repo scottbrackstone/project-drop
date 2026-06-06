@@ -8,4 +8,6 @@ export const ROUTES = {
     pathname: '/projects/[projectId]',
     params: { projectId },
   }),
+  projectOutputs: (projectId: string): Href =>
+    `/projects/${projectId}/outputs` as Href,
 } as const;

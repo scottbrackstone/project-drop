@@ -3,6 +3,12 @@ import type { Decision } from '@/types/decision';
 
 const decisions = new Map<string, Decision>();
 
+export function mockListDecisionsByProject(projectId: string): Decision[] {
+  return Array.from(decisions.values())
+    .filter((decision) => decision.projectId === projectId)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
 export function mockInsertDecisions(
   projectId: string,
   noteId: string,
