@@ -61,3 +61,9 @@ export async function supabaseCreateProjectOutput(
   if (error) throw toAppError(error);
   return mapReportRow(data as ReportRow);
 }
+
+export async function supabaseDeleteProjectOutput(id: string): Promise<void> {
+  const { error } = await getSupabaseClient().from('reports').delete().eq('id', id);
+
+  if (error) throw toAppError(error);
+}

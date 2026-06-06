@@ -1,10 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { ScrollView } from 'react-native';
 
 import { OutputGeneratorPanel } from '@/components/outputs/OutputGeneratorPanel';
 import { OutputHistoryList } from '@/components/outputs/OutputHistoryList';
-import { OutputPreview } from '@/components/outputs/OutputPreview';
-import type { GeneratedProjectOutput, ProjectOutputMode, ProjectOutputScope } from '@/types/projectOutput';
+import { OutputPreview, type OutputDisplayItem } from '@/components/outputs/OutputPreview';
+import type { ProjectOutputMode, ProjectOutputScope } from '@/types/projectOutput';
 import type { ProjectOutput } from '@/types/report';
 
 interface ProjectOutputsContentProps {
@@ -13,12 +13,21 @@ interface ProjectOutputsContentProps {
   scope: ProjectOutputScope;
   generating: boolean;
   generateError: string | null;
-  preview: GeneratedProjectOutput | null;
+  displayOutput: OutputDisplayItem | null;
   outputs: ProjectOutput[];
   outputsLoading: boolean;
+  selectedId: string | null;
+  copied: boolean;
+  actionError: string | null;
+  deletingOutputId: string | null;
   onModeChange: (mode: ProjectOutputMode) => void;
   onScopeChange: (scope: ProjectOutputScope) => void;
   onGenerate: () => void;
+  onSelectOutput: (output: ProjectOutput) => void;
+  onCopy: () => void;
+  onShare: () => void;
+  onRegenerate: () => void;
+  onDelete: () => void;
 }
 
 export function ProjectOutputsContent({
@@ -27,22 +36,23 @@ export function ProjectOutputsContent({
   scope,
   generating,
   generateError,
-  preview,
+  displayOutput,
   outputs,
   outputsLoading,
+  selectedId,
+  copied,
+  actionError,
+  deletingOutputId,
   onModeChange,
   onScopeChange,
   onGenerate,
+  onSelectOutput,
+  onCopy,
+  onShare,
+  onRegenerate,
+  onDelete,
 }: ProjectOutputsContentProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [historyPreview, setHistoryPreview] = useState<GeneratedProjectOutput | null>(null);
-
-  const handleSelect = useCallback((output: ProjectOutput) => {
-    setSelectedId(output.id);
-    setHistoryPreview({ title: output.title, content: output.content, mode: output.mode, scope: output.scope });
-  }, []);
-
-  const displayPreview = generating ? preview : (preview ?? historyPreview);
+  const isDeleting = Boolean(displayOutput?.id && deletingOutputId === displayOutput.id);
 
   return (
     <ScrollView className="flex-1" contentContainerClassName="gap-4 pb-8">
@@ -56,12 +66,22 @@ export function ProjectOutputsContent({
         onScopeChange={onScopeChange}
         onGenerate={onGenerate}
       />
-      <OutputPreview preview={displayPreview} generating={generating} />
+      <OutputPreview
+        output={displayOutput}
+        generating={generating}
+        deleting={isDeleting}
+        copied={copied}
+        actionError={actionError}
+        onCopy={onCopy}
+        onShare={onShare}
+        onRegenerate={onRegenerate}
+        onDelete={onDelete}
+      />
       <OutputHistoryList
         outputs={outputs}
         loading={outputsLoading}
         selectedId={selectedId}
-        onSelect={handleSelect}
+        onSelect={onSelectOutput}
       />
     </ScrollView>
   );

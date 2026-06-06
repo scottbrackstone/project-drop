@@ -115,6 +115,19 @@ export const COPY = {
       today: 'Today',
       last_7_days: 'Last 7 days',
     },
+    actions: {
+      copy: 'Copy',
+      copied: 'Copied',
+      share: 'Share',
+      regenerate: 'Regenerate',
+      delete: 'Delete',
+    },
+    deleteOutput: {
+      title: 'Delete output?',
+      message:
+        'This output will be removed from history. Notes, tasks, and project data are not affected.',
+      confirm: 'Delete',
+    },
   },
   voice: {
     title: 'Voice note',

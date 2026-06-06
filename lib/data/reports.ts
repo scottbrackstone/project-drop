@@ -1,11 +1,13 @@
 import {
   mockCreateProjectOutput,
+  mockDeleteProjectOutput,
   mockGetLastProjectOutputAt,
   mockGetProjectOutput,
   mockListProjectOutputs,
 } from '@/lib/data/mock/reports';
 import {
   supabaseCreateProjectOutput,
+  supabaseDeleteProjectOutput,
   supabaseGetLastProjectOutputAt,
   supabaseGetProjectOutput,
   supabaseListProjectOutputs,
@@ -39,5 +41,12 @@ export async function createProjectOutput(input: CreateProjectOutputInput): Prom
   return withDataProvider(
     () => mockCreateProjectOutput(input),
     () => supabaseCreateProjectOutput(input),
+  );
+}
+
+export async function deleteProjectOutput(id: string): Promise<void> {
+  return withDataProvider(
+    () => mockDeleteProjectOutput(id),
+    () => supabaseDeleteProjectOutput(id),
   );
 }

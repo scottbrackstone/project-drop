@@ -1,3 +1,4 @@
+import { AppError } from '@/lib/utils/errors';
 import { generateId } from '@/lib/utils/id';
 import type { CreateProjectOutputInput } from '@/types/projectOutput';
 import type { ProjectOutput } from '@/types/report';
@@ -35,6 +36,14 @@ export function mockCreateProjectOutput(input: CreateProjectOutputInput): Projec
 
   reports.set(output.id, output);
   return output;
+}
+
+export function mockDeleteProjectOutput(id: string): void {
+  if (!reports.has(id)) {
+    throw new AppError('Output not found.');
+  }
+
+  reports.delete(id);
 }
 
 export function mockPurgeReportsByProject(projectId: string): void {
