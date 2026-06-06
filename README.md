@@ -246,7 +246,8 @@ supabase db push
 - **Stage 5B:** Cleanup actions — complete task, delete note, delete project
 - **Stage 5C:** DeepSeek-powered project outputs via Edge Function
 - **Stage 5D:** DeepSeek output guardrails — size limits, rate limits, structured errors
-- **Stage 6A (current):** MVP polish, web feasibility audit, deployment readiness
+- **Stage 6A:** MVP polish, web feasibility audit, deployment readiness
+- **Stage 6B (current):** EAS internal Android distribution setup
 - **Stage 6+:** Auth, production hardening, dedicated web deployment (if needed)
 
 ## Stage 6A — MVP polish and deployment readiness
@@ -301,21 +302,60 @@ npx serve dist
 
 Voice recording and microphone permissions on web browsers are untested for MVP — treat as best-effort.
 
-### EAS internal Android build recommendation
+### Android internal testing build (EAS)
 
-**Option B — set up EAS internal distribution** when you want a standalone APK on your phone without Expo Go session limits.
+Use this when you want a **standalone APK** on your phone (not Expo Go).
 
-Current gaps (not blockers for Expo Go):
+**Prerequisites**
 
-- No `eas.json`
-- No `android.package` in `app.json`
-- No EAS project linked
+- [Expo account](https://expo.dev/signup) (project: `@scott.codes/projectdrop`)
+- EAS CLI: `npm install -g eas-cli` (or `npx eas`)
+- Logged in: `npx eas login`
 
-Expo Go remains fine for day-to-day MVP testing. Move to EAS internal when you want install-from-URL testing with your real `.env` baked into a preview build.
+**Environment variables**
 
-**Suggested next prompt (do not run until asked):**
+| Where | Variables | Notes |
+|---|---|---|
+| Local dev | `.env` from `.env.example` | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY` |
+| EAS cloud builds | EAS project env vars | Same `EXPO_PUBLIC_*` names — set in [Expo dashboard](https://expo.dev) → Project → Environment variables, or via CLI |
 
-> Set up EAS internal Android distribution for ProjectDrop: add `eas.json` with a `preview` profile (APK, internal distribution), set `android.package` in `app.json`, run `eas build:configure`, and document the exact `eas build` / install steps. Do not submit to Play Store.
+Do **not** commit `.env`. Do **not** hardcode keys in source. The Supabase anon key is public by design, but still belongs in env config only.
+
+`DEEPSEEK_API_KEY`, `MISTRAL_API_KEY`, and other provider secrets stay in **Supabase Edge Function secrets only** — not in EAS or the app.
+
+Example (set once per environment, e.g. `preview`):
+
+```bash
+npx eas env:create --name EXPO_PUBLIC_SUPABASE_URL --value "https://your-project.supabase.co" --environment preview --visibility plaintext
+npx eas env:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value "your-anon-key" --environment preview --visibility sensitive
+```
+
+Optional: `EXPO_PUBLIC_TRANSCRIPTION_BUCKET` (defaults to `voice-transcription` in code).
+
+**Build command**
+
+```bash
+npx eas build --platform android --profile preview
+```
+
+This uses the `preview` profile in `eas.json`: internal distribution, APK (`android.buildType: "apk"`).
+
+**Install on your phone**
+
+1. Wait for the build to finish on [expo.dev](https://expo.dev) (or the CLI build URL).
+2. Open the install link **on your Android phone**.
+3. Download and install the APK.
+4. If prompted, allow install from your browser or file source (Android “unknown apps” setting).
+
+**Caveats**
+
+- Internal testing only — **not** Play Store production.
+- Supabase Edge Functions still use MVP `verify_jwt = false`.
+- DeepSeek/Mistral API keys remain in Supabase secrets.
+- Output rate limits are still fingerprint/IP based (no per-user auth yet).
+- First cloud build may prompt for Android keystore setup (EAS can generate one).
+
+Expo Go remains fine for quick dev; use the preview APK for daily MVP testing with a fixed install.
 
 ### Stage 6A manual test checklist
 
