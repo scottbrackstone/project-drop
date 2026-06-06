@@ -40,6 +40,22 @@ export const COPY = {
     notesLoading: 'Loading notes…',
     tasksLoading: 'Loading tasks…',
     summariseButton: 'Summarise project',
+    textDivider: 'Or type a note',
+  },
+  voice: {
+    title: 'Voice note',
+    description:
+      'Record on your device. Audio stays local for now — add a typed note below to save project memory.',
+    startRecording: 'Start recording',
+    stopRecording: 'Stop recording',
+    discardRecording: 'Discard',
+    playRecording: 'Play',
+    pausePlayback: 'Pause',
+    savedRecording: 'Recording saved on device',
+    recording: 'Recording…',
+    ready: 'Ready',
+    permissionDenied:
+      'Microphone access denied. Enable it in your device settings to record voice notes.',
   },
   projectForm: {
     nameLabel: 'Project name',
@@ -60,4 +76,8 @@ export const COPY = {
 
 export function formatDataModeLabel(provider: 'mock' | 'supabase'): string {
   return provider === 'mock' ? COPY.home.dataModeMock : COPY.home.dataModeSupabase;
+}
+
+export function formatPlaybackTime(current: string): string {
+  return `Playback: ${current}`;
 }

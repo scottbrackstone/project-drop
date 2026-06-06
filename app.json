@@ -33,6 +33,13 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow ProjectDrop to record voice notes for your projects.",
+          "recordAudioAndroid": true
+        }
       ]
     ],
     "experiments": {

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
+import { VoiceRecorder } from '@/components/notes/VoiceRecorder';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
 import { COPY } from '@/constants/copy';
+import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 
 interface NoteCaptureFormProps {
   onSubmit: (transcript: string) => Promise<boolean>;
@@ -13,6 +15,7 @@ interface NoteCaptureFormProps {
 
 export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureFormProps) {
   const [transcript, setTranscript] = useState('');
+  const voice = useAudioRecorder();
 
   async function handleSubmit() {
     const saved = await onSubmit(transcript);
@@ -20,15 +23,34 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
   }
 
   return (
-    <View className="gap-3">
+    <View className="gap-4">
       <Text className="text-sm text-neutral-600">{COPY.projectDetail.captureDescription}</Text>
-      <Textarea
-        label={COPY.projectDetail.captureTitle}
-        value={transcript}
-        onChangeText={setTranscript}
-        placeholder={COPY.projectDetail.capturePlaceholder}
-        editable={!submitting}
+
+      <VoiceRecorder
+        isRecording={voice.isRecording}
+        durationMillis={voice.durationMillis}
+        recordingUri={voice.recordingUri}
+        permissionDenied={voice.permissionDenied}
+        isBusy={voice.isBusy}
+        error={voice.error}
+        onStart={() => void voice.startRecording()}
+        onStop={() => void voice.stopRecording()}
+        onDiscard={() => void voice.discardRecording()}
       />
+
+      <View className="gap-2">
+        <Text className="text-sm font-medium text-neutral-700">
+          {COPY.projectDetail.textDivider}
+        </Text>
+        <Textarea
+          label={COPY.projectDetail.captureTitle}
+          value={transcript}
+          onChangeText={setTranscript}
+          placeholder={COPY.projectDetail.capturePlaceholder}
+          editable={!submitting}
+        />
+      </View>
+
       {error ? <Text className="text-sm text-red-600">{error}</Text> : null}
       <Button
         title={submitting ? COPY.projectDetail.captureProcessing : COPY.projectDetail.captureButton}
