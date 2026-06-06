@@ -17,7 +17,7 @@ interface OutputHistoryListProps {
 export function OutputHistoryList({
   outputs,
   loading,
-  selectedId: _selectedId,
+  selectedId,
   onSelect,
 }: OutputHistoryListProps) {
   return (
@@ -29,7 +29,12 @@ export function OutputHistoryList({
       {!loading && outputs.length > 0 ? (
         <View>
           {outputs.map((output) => (
-            <OutputCard key={output.id} output={output} onPress={onSelect} />
+            <OutputCard
+              key={output.id}
+              output={output}
+              onPress={onSelect}
+              selected={output.id === selectedId}
+            />
           ))}
         </View>
       ) : null}

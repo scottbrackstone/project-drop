@@ -8,14 +8,18 @@ import type { ProjectOutput } from '@/types/report';
 interface OutputCardProps {
   output: ProjectOutput;
   onPress: (output: ProjectOutput) => void;
+  selected?: boolean;
 }
 
-export function OutputCard({ output, onPress }: OutputCardProps) {
+export function OutputCard({ output, onPress, selected = false }: OutputCardProps) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ selected }}
       onPress={() => onPress(output)}
-      className="border-b border-neutral-100 py-3 active:bg-neutral-50"
+      className={`border-b border-neutral-100 py-3 active:bg-neutral-50 ${
+        selected ? 'bg-neutral-50' : ''
+      }`}
     >
       <Text className="text-base font-semibold text-neutral-900">{output.title}</Text>
       <View className="mt-2 flex-row flex-wrap gap-2">

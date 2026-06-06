@@ -6,6 +6,10 @@ interface ScopedItem {
   createdAt: string;
 }
 
+function startOfLocalDay(now: Date): Date {
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
 export function resolveScopeCutoff(
   scope: ProjectOutputScope,
   lastOutputAt: string | null,
@@ -13,6 +17,10 @@ export function resolveScopeCutoff(
 ): { cutoff: string | null; usedFallback: boolean } {
   if (scope === 'full') {
     return { cutoff: null, usedFallback: false };
+  }
+
+  if (scope === 'today') {
+    return { cutoff: startOfLocalDay(now).toISOString(), usedFallback: false };
   }
 
   if (scope === 'last_7_days') {
@@ -42,7 +50,7 @@ export function filterByScope<T extends ScopedItem>(
   const filtered = items.filter((item) => {
     const created = new Date(item.createdAt).getTime();
     if (Number.isNaN(created)) return false;
-    if (scope === 'last_7_days') {
+    if (scope === 'last_7_days' || scope === 'today') {
       return created >= cutoffTime;
     }
     return created > cutoffTime;

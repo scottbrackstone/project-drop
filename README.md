@@ -150,8 +150,11 @@ Generate formatted views from existing project notes, tasks, and decisions.
 |---|---|
 | Project snapshot | Overview of notes, open tasks, and decisions |
 | Next actions | Open tasks plus action phrases from notes |
+| Open loops | Unresolved questions, risks, follow-ups, and blockers |
 | Decisions log | Saved decisions plus decision phrases from notes |
 | Meeting update | Short stakeholder-style summary |
+| Report | Formal background, findings, tasks, and recommendations |
+| Coding agent handoff | Copy/paste handoff for Codex or another coding agent |
 
 **Scope options:**
 
@@ -159,7 +162,10 @@ Generate formatted views from existing project notes, tasks, and decisions.
 |---|---|
 | Full project | All notes, open tasks, and decisions |
 | Since last output | Items created after the latest saved output (falls back to full project with a hint if none exist) |
+| Today | Items from the start of the current local day |
 | Last 7 days | Items from the past seven days |
+
+Custom date ranges are planned for a later stage.
 
 Flow: project detail → **Project outputs** → pick mode + scope → **Generate output** → preview appears → output auto-saves to the `reports` table → appears in recent outputs.
 
@@ -225,8 +231,8 @@ Structured Edge Function errors map to clear app messages. Failed outputs are no
 
 Apply [`supabase/migrations/20250606140000_project_outputs.sql`](supabase/migrations/20250606140000_project_outputs.sql) to extend `reports` with:
 
-- `mode` — output mode (`snapshot`, `next_actions`, `decisions_log`, `meeting_update`)
-- `scope` — scope used (`full`, `since_last_output`, `last_7_days`)
+- `mode` — output mode (`snapshot`, `next_actions`, `open_loops`, `decisions_log`, `meeting_update`, `report`, `coding_agent_handoff`)
+- `scope` — scope used (`full`, `since_last_output`, `today`, `last_7_days`)
 - `scope_from` / `scope_to` — reserved for custom date ranges (null in 5A)
 
 ```bash
@@ -247,7 +253,8 @@ supabase db push
 - **Stage 5C:** DeepSeek-powered project outputs via Edge Function
 - **Stage 5D:** DeepSeek output guardrails — size limits, rate limits, structured errors
 - **Stage 6A:** MVP polish, web feasibility audit, deployment readiness
-- **Stage 6B (current):** EAS internal Android distribution setup
+- **Stage 6B:** EAS internal Android distribution setup
+- **Stage 6C (current):** Expanded output modes and output UI polish
 - **Stage 6+:** Auth, production hardening, dedicated web deployment (if needed)
 
 ## Stage 6A — MVP polish and deployment readiness
@@ -356,6 +363,30 @@ This uses the `preview` profile in `eas.json`: internal distribution, APK (`andr
 - First cloud build may prompt for Android keystore setup (EAS can generate one).
 
 Expo Go remains fine for quick dev; use the preview APK for daily MVP testing with a fixed install.
+
+### Stage 6C manual test checklist
+
+**Mock mode**
+
+1. Disable Supabase env vars.
+2. Generate all seven output modes — no crashes.
+3. Confirm each saves to history.
+4. Test **Today** scope with notes from today vs yesterday.
+
+**Supabase + DeepSeek**
+
+1. Add messy notes with tasks, decisions, unanswered questions, risks, and coding details.
+2. Generate **Open loops** — confirm unresolved items appear.
+3. Generate **Report** — confirm formal sections.
+4. Generate **Coding agent handoff** — confirm copy/paste structure; no invented files/commits.
+5. Generate with **Today** scope — only today's activity included.
+6. Confirm existing modes, history, and Stage 5D limits/errors still work.
+
+After changing Edge Function prompts/validation, redeploy:
+
+```bash
+supabase functions deploy generate-project-output --project-ref jorswhgetwaqraldaqnv --no-verify-jwt
+```
 
 ### Stage 6A manual test checklist
 

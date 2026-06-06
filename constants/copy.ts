@@ -79,12 +79,25 @@ export const COPY = {
     modes: {
       snapshot: 'Project snapshot',
       next_actions: 'Next actions',
+      open_loops: 'Open loops',
       decisions_log: 'Decisions log',
       meeting_update: 'Meeting update',
+      report: 'Report',
+      coding_agent_handoff: 'Coding agent handoff',
+    },
+    modeDescriptions: {
+      snapshot: 'Overview of notes, tasks, and decisions.',
+      next_actions: 'Prioritised tasks and suggested next steps.',
+      open_loops: 'Unresolved questions, risks, follow-ups, and blockers.',
+      decisions_log: 'Decisions made with reasoning when available.',
+      meeting_update: 'Stakeholder-friendly summary of recent progress.',
+      report: 'Formal background, findings, tasks, and recommendations.',
+      coding_agent_handoff: 'Copy/paste handoff for Codex or another coding agent.',
     },
     scopes: {
       full: 'Full project',
       since_last_output: 'Since last output',
+      today: 'Today',
       last_7_days: 'Last 7 days',
     },
   },
@@ -141,6 +154,10 @@ export function formatPlaybackTime(current: string): string {
 
 export function getOutputModeLabel(mode: keyof typeof COPY.outputs.modes): string {
   return COPY.outputs.modes[mode];
+}
+
+export function getOutputModeDescription(mode: keyof typeof COPY.outputs.modeDescriptions): string {
+  return COPY.outputs.modeDescriptions[mode];
 }
 
 export function getOutputScopeLabel(scope: keyof typeof COPY.outputs.scopes): string {

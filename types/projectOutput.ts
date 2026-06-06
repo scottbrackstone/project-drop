@@ -3,9 +3,16 @@ import type { NoteWithTags } from '@/types/note';
 import type { Project } from '@/types/project';
 import type { Task } from '@/types/task';
 
-export type ProjectOutputMode = 'snapshot' | 'next_actions' | 'decisions_log' | 'meeting_update';
+export type ProjectOutputMode =
+  | 'snapshot'
+  | 'next_actions'
+  | 'open_loops'
+  | 'decisions_log'
+  | 'meeting_update'
+  | 'report'
+  | 'coding_agent_handoff';
 
-export type ProjectOutputScope = 'full' | 'since_last_output' | 'last_7_days';
+export type ProjectOutputScope = 'full' | 'since_last_output' | 'today' | 'last_7_days';
 
 export interface ProjectContextBundle {
   project: Project;
@@ -37,12 +44,16 @@ export interface CreateProjectOutputInput {
 export const PROJECT_OUTPUT_MODES: ProjectOutputMode[] = [
   'snapshot',
   'next_actions',
+  'open_loops',
   'decisions_log',
   'meeting_update',
+  'report',
+  'coding_agent_handoff',
 ];
 
 export const PROJECT_OUTPUT_SCOPES: ProjectOutputScope[] = [
   'full',
   'since_last_output',
+  'today',
   'last_7_days',
 ];

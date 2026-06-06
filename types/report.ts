@@ -31,8 +31,11 @@ function parseOutputMode(value: string): ProjectOutputMode {
   if (
     value === 'snapshot' ||
     value === 'next_actions' ||
+    value === 'open_loops' ||
     value === 'decisions_log' ||
-    value === 'meeting_update'
+    value === 'meeting_update' ||
+    value === 'report' ||
+    value === 'coding_agent_handoff'
   ) {
     return value;
   }
@@ -40,7 +43,12 @@ function parseOutputMode(value: string): ProjectOutputMode {
 }
 
 function parseOutputScope(value: string): ProjectOutputScope {
-  if (value === 'full' || value === 'since_last_output' || value === 'last_7_days') {
+  if (
+    value === 'full' ||
+    value === 'since_last_output' ||
+    value === 'today' ||
+    value === 'last_7_days'
+  ) {
     return value;
   }
   return 'full';

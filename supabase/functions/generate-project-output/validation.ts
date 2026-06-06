@@ -10,7 +10,7 @@ import {
 } from './limits.ts';
 import { isValidOutputMode, type OutputModeName } from './prompts.ts';
 
-const VALID_SCOPES = new Set(['full', 'since_last_output', 'last_7_days']);
+const VALID_SCOPES = new Set(['full', 'since_last_output', 'today', 'last_7_days']);
 
 export interface OutputNotePayload {
   id: string;
