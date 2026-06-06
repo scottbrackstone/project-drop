@@ -60,7 +60,9 @@ export const COPY = {
     transcriptPlaceholder: 'Type what you said…',
     sourceBadge: 'Voice',
     useMockTranscript: 'Use mock transcript',
+    transcribeRecording: 'Transcribe recording',
     transcribingMock: 'Generating mock transcript…',
+    transcribingRemote: 'Transcribing…',
     mockTranscriptWarning:
       'This is mock transcription text for testing. Edit it before saving.',
     mockTranscriptDisabledHint:

@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/Button';
 import { COPY } from '@/constants/copy';
 
 interface VoiceTranscriptActionsProps {
-  onUseMockTranscript: () => void;
+  isRemoteConfigured: boolean;
+  onTranscribe: () => void;
   transcribing: boolean;
   error: string | null;
   showMockWarning: boolean;
@@ -12,8 +13,20 @@ interface VoiceTranscriptActionsProps {
   disabled: boolean;
 }
 
+function getTranscribeButtonTitle(
+  isRemoteConfigured: boolean,
+  transcribing: boolean,
+): string {
+  if (transcribing) {
+    return isRemoteConfigured ? COPY.voice.transcribingRemote : COPY.voice.transcribingMock;
+  }
+
+  return isRemoteConfigured ? COPY.voice.transcribeRecording : COPY.voice.useMockTranscript;
+}
+
 export function VoiceTranscriptActions({
-  onUseMockTranscript,
+  isRemoteConfigured,
+  onTranscribe,
   transcribing,
   error,
   showMockWarning,
@@ -23,8 +36,8 @@ export function VoiceTranscriptActions({
   return (
     <View className="gap-2">
       <Button
-        title={transcribing ? COPY.voice.transcribingMock : COPY.voice.useMockTranscript}
-        onPress={onUseMockTranscript}
+        title={getTranscribeButtonTitle(isRemoteConfigured, transcribing)}
+        onPress={onTranscribe}
         loading={transcribing}
         variant="secondary"
         size="sm"

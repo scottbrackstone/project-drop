@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { COPY } from '@/constants/copy';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 import { useTranscribeRecording } from '@/hooks/useTranscribeRecording';
+import { isTranscriptionConfigured } from '@/lib/transcription/transcriptionConfig';
 import type { CreateTextNoteOptions } from '@/types/note';
 
 interface NoteCaptureFormProps {
@@ -23,6 +24,7 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
   const transcription = useTranscribeRecording();
   const hasRecording = Boolean(voice.recordingUri);
   const hasTranscriptText = Boolean(transcript.trim());
+  const remoteTranscriptionConfigured = isTranscriptionConfigured();
 
   function clearTranscriptState() {
     setTranscript('');
@@ -35,7 +37,7 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
     clearTranscriptState();
   }
 
-  async function handleUseMockTranscript() {
+  async function handleTranscribeRecording() {
     if (!voice.recordingUri || hasTranscriptText) return;
 
     const result = await transcription.transcribe(voice.recordingUri);
@@ -74,7 +76,8 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
 
       {hasRecording ? (
         <VoiceTranscriptActions
-          onUseMockTranscript={() => void handleUseMockTranscript()}
+          isRemoteConfigured={remoteTranscriptionConfigured}
+          onTranscribe={() => void handleTranscribeRecording()}
           transcribing={transcription.transcribing}
           error={transcription.error}
           showMockWarning={showMockWarning}

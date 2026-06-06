@@ -12,8 +12,7 @@ export async function transcribeAudio(audioUri: string): Promise<TranscriptionRe
   }
 
   if (isTranscriptionConfigured()) {
-    const remoteResult = await transcribeWithRemote(trimmedUri);
-    if (remoteResult) return remoteResult;
+    return transcribeWithRemote(trimmedUri);
   }
 
   return mockTranscribeAudio(trimmedUri);
