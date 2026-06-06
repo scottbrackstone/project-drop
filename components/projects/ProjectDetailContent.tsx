@@ -2,6 +2,7 @@ import { ScrollView, View } from 'react-native';
 
 import { ProjectCaptureSection } from '@/components/projects/ProjectCaptureSection';
 import { ProjectDetailActions } from '@/components/projects/ProjectDetailActions';
+import { ProjectEmptyGuide } from '@/components/projects/ProjectEmptyGuide';
 import { ProjectNotesSection } from '@/components/projects/ProjectNotesSection';
 import { ProjectTasksSection } from '@/components/projects/ProjectTasksSection';
 import { Badge } from '@/components/ui/Badge';
@@ -42,6 +43,9 @@ export function ProjectDetailContent({
   onCompleteTask,
   onDeleteNote,
 }: ProjectDetailContentProps) {
+  const isEmptyProject =
+    !notesLoading && !tasksLoading && notes.length === 0 && tasks.length === 0;
+
   return (
     <ScrollView className="flex-1" contentContainerClassName="gap-4 pb-8">
       <View className="flex-row items-center gap-2">
@@ -53,6 +57,7 @@ export function ProjectDetailContent({
         submitting={savingNote}
         error={saveError}
       />
+      {isEmptyProject ? <ProjectEmptyGuide /> : null}
       <ProjectTasksSection
         tasks={tasks}
         loading={tasksLoading}

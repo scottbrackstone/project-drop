@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 
 import { ResourceScreenShell } from '@/components/layout/ResourceScreenShell';
@@ -11,6 +11,7 @@ import type { CreateTextNoteOptions } from '@/types/note';
 import { useNotes } from '@/hooks/useNotes';
 import { useProject } from '@/hooks/useProject';
 import { useProjectTasks } from '@/hooks/useProjectTasks';
+import { saveRecentProjectId } from '@/lib/settings/recentProject';
 import { confirmDestructive } from '@/lib/utils/confirmDestructive';
 
 export default function ProjectDetailScreen() {
@@ -18,6 +19,12 @@ export default function ProjectDetailScreen() {
   const { project, loading, error } = useProject(projectId);
   const { notes, loading: notesLoading, refresh: refreshNotes } = useNotes(projectId);
   const { tasks, loading: tasksLoading, refresh: refreshTasks } = useProjectTasks(projectId);
+
+  useEffect(() => {
+    if (project?.id) {
+      void saveRecentProjectId(project.id);
+    }
+  }, [project?.id]);
 
   const handleNoteCreated = useCallback(async () => {
     await Promise.all([refreshNotes(), refreshTasks()]);

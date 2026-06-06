@@ -8,6 +8,10 @@ import { COPY } from '@/constants/copy';
 import { ROUTES } from '@/constants/routes';
 import { useDeleteProject } from '@/hooks/useDeleteProject';
 import { useProject } from '@/hooks/useProject';
+import {
+  clearRecentProjectId,
+  loadRecentProjectId,
+} from '@/lib/settings/recentProject';
 import { confirmDestructive } from '@/lib/utils/confirmDestructive';
 
 export default function ProjectProjectSettingsScreen() {
@@ -15,9 +19,13 @@ export default function ProjectProjectSettingsScreen() {
   const { projectId } = useLocalSearchParams<{ projectId: string }>();
   const { project, loading, error } = useProject(projectId);
 
-  const handleDeleteSuccess = useCallback(() => {
+  const handleDeleteSuccess = useCallback(async () => {
+    const recentId = await loadRecentProjectId();
+    if (recentId && recentId === projectId) {
+      await clearRecentProjectId();
+    }
     router.replace(ROUTES.projects);
-  }, [router]);
+  }, [projectId, router]);
 
   const {
     remove: removeProject,

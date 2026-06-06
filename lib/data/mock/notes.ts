@@ -19,6 +19,10 @@ import type {
 
 const notes = new Map<string, Note>();
 
+export function mockCountNotesByProject(projectId: string): number {
+  return Array.from(notes.values()).filter((note) => note.projectId === projectId).length;
+}
+
 export function mockListNotesByProject(projectId: string): NoteWithTags[] {
   return Array.from(notes.values())
     .filter((note) => note.projectId === projectId)

@@ -5,10 +5,11 @@ import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { ROUTES } from '@/constants/routes';
 import { formatRelativeDate } from '@/lib/utils/dates';
-import type { Project } from '@/types/project';
+import { formatProjectStatsLine } from '@/lib/utils/projectStats';
+import type { ProjectWithStats } from '@/types/project';
 
 interface ProjectCardProps {
-  project: Project;
+  project: ProjectWithStats;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
@@ -26,6 +27,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {project.description}
           </Text>
         ) : null}
+        <Text className="text-sm text-neutral-600">
+          {formatProjectStatsLine(project.noteCount, project.openTaskCount)}
+        </Text>
         <Text className="text-sm text-neutral-500">
           Updated {formatRelativeDate(project.updatedAt)}
         </Text>

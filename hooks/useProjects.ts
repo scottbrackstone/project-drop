@@ -1,18 +1,18 @@
 import { useCallback } from 'react';
 
-import { listProjects } from '@/lib/data/projects';
+import { listProjectsWithStats } from '@/lib/data/projects';
 import { useAsyncResource } from '@/hooks/useAsyncResource';
-import type { Project } from '@/types/project';
+import type { ProjectWithStats } from '@/types/project';
 
 interface UseProjectsResult {
-  projects: Project[];
+  projects: ProjectWithStats[];
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
 }
 
 export function useProjects(): UseProjectsResult {
-  const fetcher = useCallback(() => listProjects(), []);
+  const fetcher = useCallback(() => listProjectsWithStats(), []);
 
   const { data, loading, error, refresh } = useAsyncResource(fetcher);
 

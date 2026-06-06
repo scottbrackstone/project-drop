@@ -6,10 +6,10 @@ import { ProjectList } from '@/components/projects/ProjectList';
 import { Button } from '@/components/ui/Button';
 import { COPY } from '@/constants/copy';
 import { ROUTES } from '@/constants/routes';
-import type { Project } from '@/types/project';
+import type { ProjectWithStats } from '@/types/project';
 
 interface ProjectsScreenContentProps {
-  projects: Project[];
+  projects: ProjectWithStats[];
   loading: boolean;
   error: string | null;
   refreshing: boolean;

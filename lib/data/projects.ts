@@ -4,18 +4,20 @@ import {
   mockGetProject,
   mockListProjects,
 } from '@/lib/data/mock/projects';
+import { mockListProjectsWithStats } from '@/lib/data/mock/projectStats';
 import {
   supabaseCreateProject,
   supabaseDeleteProject,
   supabaseGetProject,
   supabaseListProjects,
 } from '@/lib/data/supabase/projects';
+import { supabaseListProjectsWithStats } from '@/lib/data/supabase/projectStats';
 import { withDataProvider } from '@/lib/data/withProvider';
 import {
   validateProjectDescription,
   validateProjectName,
 } from '@/lib/utils/validation';
-import type { CreateProjectInput, Project } from '@/types/project';
+import type { CreateProjectInput, Project, ProjectWithStats } from '@/types/project';
 
 function normalizeCreateInput(input: CreateProjectInput): CreateProjectInput {
   return {
@@ -27,6 +29,10 @@ function normalizeCreateInput(input: CreateProjectInput): CreateProjectInput {
 
 export async function listProjects(): Promise<Project[]> {
   return withDataProvider(mockListProjects, supabaseListProjects);
+}
+
+export async function listProjectsWithStats(): Promise<ProjectWithStats[]> {
+  return withDataProvider(mockListProjectsWithStats, supabaseListProjectsWithStats);
 }
 
 export async function getProject(id: string): Promise<Project | null> {

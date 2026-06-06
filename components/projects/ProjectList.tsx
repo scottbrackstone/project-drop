@@ -4,10 +4,10 @@ import { ProjectCard } from '@/components/projects/ProjectCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { COPY } from '@/constants/copy';
-import type { Project } from '@/types/project';
+import type { ProjectWithStats } from '@/types/project';
 
 interface ProjectListProps {
-  projects: Project[];
+  projects: ProjectWithStats[];
   loading: boolean;
   error: string | null;
   onCreatePress: () => void;

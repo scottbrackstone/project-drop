@@ -10,6 +10,11 @@ export interface Project {
   updatedAt: string;
 }
 
+export interface ProjectWithStats extends Project {
+  noteCount: number;
+  openTaskCount: number;
+}
+
 export interface CreateProjectInput {
   name: string;
   description?: string | null;

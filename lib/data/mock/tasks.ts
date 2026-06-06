@@ -4,6 +4,12 @@ import type { Task } from '@/types/task';
 
 const tasks = new Map<string, Task>();
 
+export function mockCountOpenTasksByProject(projectId: string): number {
+  return Array.from(tasks.values()).filter(
+    (task) => task.projectId === projectId && task.status === 'open',
+  ).length;
+}
+
 export function mockListOpenTasksByProject(projectId: string): Task[] {
   return Array.from(tasks.values())
     .filter((task) => task.projectId === projectId && task.status === 'open')
