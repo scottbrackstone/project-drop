@@ -172,20 +172,54 @@ Flow: project detail → **Project outputs** → pick mode + scope → **Generat
 Set Edge Function secrets (never in the Expo app):
 
 ```bash
-supabase secrets set DEEPSEEK_API_KEY=your-deepseek-key
+supabase secrets set DEEPSEEK_API_KEY=your_key_here --project-ref jorswhgetwaqraldaqnv
 # Optional — defaults to deepseek-v4-flash
-supabase secrets set DEEPSEEK_MODEL=deepseek-v4-flash
+supabase secrets set DEEPSEEK_MODEL=deepseek-v4-flash --project-ref jorswhgetwaqraldaqnv
+```
+
+Apply usage-tracking migration (Stage 5D):
+
+```bash
+supabase db push
 ```
 
 Deploy:
 
 ```bash
-supabase functions deploy generate-project-output --no-verify-jwt
+supabase functions deploy generate-project-output --project-ref jorswhgetwaqraldaqnv --no-verify-jwt
 ```
 
 **Default model:** `deepseek-v4-flash` (override with `DEEPSEEK_MODEL` secret).
 
-**MVP security:** `verify_jwt = false` allows anonymous output generation for testing. Before production: add auth, re-enable JWT verification, rate-limit DeepSeek usage, and tighten RLS.
+### Output guardrails (Stage 5D)
+
+**Request limits (client + server):**
+
+| Limit | Value |
+|---|---|
+| Max notes | 50 (most recent kept) |
+| Max tasks | 100 |
+| Max decisions | 100 |
+| Max note text per field | 2,000 chars |
+| Max task title | 300 chars |
+| Max decision text | 1,000 chars |
+| Max total context JSON | 60,000 chars |
+
+**DeepSeek call limits:** `max_tokens: 1600`, `temperature: 0.2`, 60s timeout.
+
+**Rate limits (DB-backed, anonymous fingerprint):**
+
+| Limit | Value |
+|---|---|
+| Generations per hour | 10 |
+| Generations per day | 30 |
+| Estimated context chars per day | 200,000 |
+
+Fingerprints hash `x-forwarded-for` + `user-agent` (SHA-256). Usage is stored in `llm_usage_events` (service role only).
+
+Structured Edge Function errors map to clear app messages. Failed outputs are not saved. Mock formatters remain for mock mode only.
+
+**MVP security:** `verify_jwt = false` still allows anonymous invokes. Before production: add auth, re-enable JWT verification, require signed-in users, tighten RLS, and keep cost/rate limits (consider per-user quotas).
 
 ### Reports migration
 
@@ -210,7 +244,8 @@ supabase db push
 - **Stage 4D:** Remote transcription via Supabase Storage + Edge Function
 - **Stage 5A:** Project outputs — mock formatters, mode/scope selection, reports persistence
 - **Stage 5B:** Cleanup actions — complete task, delete note, delete project
-- **Stage 5C (current):** DeepSeek-powered project outputs via Edge Function
+- **Stage 5C:** DeepSeek-powered project outputs via Edge Function
+- **Stage 5D (current):** DeepSeek output guardrails — size limits, rate limits, structured errors
 - **Stage 6:** Polish, tests, error handling
 
 ## Stage 4D manual test checklist
@@ -231,6 +266,15 @@ supabase db push
 4. Temporarily remove `MISTRAL_API_KEY` secret → tap transcribe → clear error shown (no mock fallback).
 5. Confirm no `MISTRAL_API_KEY` or `OPENAI_API_KEY` in client code or `EXPO_PUBLIC_*` env vars.
 6. Optional: set `TRANSCRIPTION_PROVIDER=openai` and `OPENAI_API_KEY` to verify legacy provider path.
+
+## Stage 5D manual test checklist
+
+1. Mock mode — generate output without Supabase env (rule-based, no DeepSeek).
+2. Supabase mode — all four output modes still work and save to history.
+3. Large project — 50+ notes or huge note bodies are trimmed or rejected with a clear error.
+4. Missing `DEEPSEEK_API_KEY` — provider error shown, nothing saved.
+5. Repeated generation — rate limit error after thresholds, nothing saved.
+6. Transcription and Stage 5B cleanup actions still work.
 
 ## Stage 5C manual test checklist
 

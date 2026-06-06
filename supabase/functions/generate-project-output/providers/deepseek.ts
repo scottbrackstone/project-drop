@@ -1,3 +1,9 @@
+import {
+  DEEPSEEK_MAX_TOKENS,
+  DEEPSEEK_TEMPERATURE,
+  DEEPSEEK_TIMEOUT_MS,
+} from '../limits.ts';
+
 interface DeepSeekMessage {
   role: 'system' | 'user';
   content: string;
@@ -25,36 +31,49 @@ export async function generateWithDeepSeek(input: {
   systemPrompt: string;
   userPrompt: string;
 }): Promise<DeepSeekOutput> {
-  const response = await fetch('https://api.deepseek.com/chat/completions', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${input.apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: input.model,
-      messages: [
-        { role: 'system', content: input.systemPrompt },
-        { role: 'user', content: input.userPrompt },
-      ] satisfies DeepSeekMessage[],
-      response_format: { type: 'json_object' },
-      temperature: 0.3,
-    }),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), DEEPSEEK_TIMEOUT_MS);
 
-  const payload = (await response.json()) as DeepSeekChatResponse;
+  try {
+    const response = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${input.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: input.model,
+        messages: [
+          { role: 'system', content: input.systemPrompt },
+          { role: 'user', content: input.userPrompt },
+        ] satisfies DeepSeekMessage[],
+        response_format: { type: 'json_object' },
+        temperature: DEEPSEEK_TEMPERATURE,
+        max_tokens: DEEPSEEK_MAX_TOKENS,
+      }),
+    });
 
-  if (!response.ok) {
-    const message = payload.error?.message ?? `DeepSeek request failed (${response.status}).`;
-    throw new Error(message);
+    const payload = (await response.json()) as DeepSeekChatResponse;
+
+    if (!response.ok) {
+      throw new Error(payload.error?.message ?? `DeepSeek request failed (${response.status}).`);
+    }
+
+    const rawContent = payload.choices?.[0]?.message?.content?.trim();
+    if (!rawContent) {
+      throw new Error('DeepSeek returned an empty response.');
+    }
+
+    return parseDeepSeekJson(rawContent);
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('DeepSeek request timed out.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const rawContent = payload.choices?.[0]?.message?.content?.trim();
-  if (!rawContent) {
-    throw new Error('DeepSeek returned an empty response.');
-  }
-
-  return parseDeepSeekJson(rawContent);
 }
 
 function parseDeepSeekJson(rawContent: string): DeepSeekOutput {

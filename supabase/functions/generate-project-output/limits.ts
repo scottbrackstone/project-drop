@@ -1,0 +1,15 @@
+export const MAX_OUTPUT_NOTES = 50;
+export const MAX_OUTPUT_TASKS = 100;
+export const MAX_OUTPUT_DECISIONS = 100;
+export const MAX_NOTE_TEXT_CHARS = 2000;
+export const MAX_TASK_TITLE_CHARS = 300;
+export const MAX_DECISION_TEXT_CHARS = 1000;
+export const MAX_TOTAL_CONTEXT_CHARS = 60_000;
+
+export const MAX_GENERATIONS_PER_HOUR = 10;
+export const MAX_GENERATIONS_PER_DAY = 30;
+export const MAX_ESTIMATED_CHARS_PER_DAY = 200_000;
+
+export const DEEPSEEK_MAX_TOKENS = 1600;
+export const DEEPSEEK_TEMPERATURE = 0.2;
+export const DEEPSEEK_TIMEOUT_MS = 60_000;
