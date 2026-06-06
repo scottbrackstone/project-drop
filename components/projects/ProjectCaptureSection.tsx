@@ -1,12 +1,21 @@
+import { NoteCaptureForm } from '@/components/notes/NoteCaptureForm';
+import { SectionCard } from '@/components/ui/SectionCard';
 import { COPY } from '@/constants/copy';
-import { SectionCard, SectionPlaceholder } from '@/components/ui/SectionCard';
-import { Button } from '@/components/ui/Button';
 
-export function ProjectCaptureSection() {
+interface ProjectCaptureSectionProps {
+  onSubmit: (transcript: string) => Promise<boolean>;
+  submitting: boolean;
+  error: string | null;
+}
+
+export function ProjectCaptureSection({
+  onSubmit,
+  submitting,
+  error,
+}: ProjectCaptureSectionProps) {
   return (
     <SectionCard title={COPY.projectDetail.captureTitle}>
-      <SectionPlaceholder description={COPY.projectDetail.captureDescription} />
-      <Button title={COPY.projectDetail.captureButton} disabled variant="secondary" />
+      <NoteCaptureForm onSubmit={onSubmit} submitting={submitting} error={error} />
     </SectionCard>
   );
 }

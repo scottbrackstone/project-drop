@@ -84,8 +84,8 @@ MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **
 
 ## MVP stages
 
-- **Stage 1–2 (current):** App shell, projects create/list/detail, Supabase schema
-- **Stage 3:** Text notes + mock AI processing
+- **Stage 1–2:** App shell, projects create/list/detail, Supabase schema
+- **Stage 3 (current):** Text notes + mock AI processing (tasks, decisions, tags)
 - **Stage 4:** Voice recording + transcription
 - **Stage 5:** Project summary/report
 - **Stage 6:** Polish, tests, error handling
@@ -96,7 +96,13 @@ MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **
 
 1. `npm run android` → home screen loads
 2. Tap **Create project** → enter name → lands on project detail
-3. Back to **View projects** → project appears in list
+3. Paste the test note below → tap **Save to project**
+4. Confirm note timeline, summary, task, and tags update
+5. Back to **View projects** → project appears in list
+
+**Stage 3 test note:**
+
+> Remember to follow up with the client tomorrow about the bonnet photos. I decided to keep the report simple and focus on the rust under the primer.
 
 ### Supabase mode
 

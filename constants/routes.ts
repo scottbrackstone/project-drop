@@ -1,7 +1,11 @@
+import type { Href } from 'expo-router';
+
 export const ROUTES = {
-  home: '/',
-  projects: '/projects',
-  projectsNew: '/projects/new',
-  projectDetail: (projectId: string) => `/projects/${projectId}`,
-  projectReport: (projectId: string) => `/projects/${projectId}/report`,
+  home: '/' as Href,
+  projects: '/projects' as Href,
+  projectsNew: '/projects/new' as Href,
+  projectDetail: (projectId: string): Href => ({
+    pathname: '/projects/[projectId]',
+    params: { projectId },
+  }),
 } as const;

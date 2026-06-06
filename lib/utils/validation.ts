@@ -26,3 +26,17 @@ export function validateProjectDescription(description?: string | null): string 
   }
   return trimmed;
 }
+
+export function validateNoteTranscript(transcript: string): string {
+  const trimmed = transcript.trim();
+  if (!trimmed) {
+    throw new Error('Note cannot be empty.');
+  }
+  if (trimmed.length < LIMITS.noteTranscriptMin) {
+    throw new Error(`Note must be at least ${LIMITS.noteTranscriptMin} characters.`);
+  }
+  if (trimmed.length > LIMITS.noteTranscriptMax) {
+    throw new Error(`Note must be ${LIMITS.noteTranscriptMax} characters or fewer.`);
+  }
+  return trimmed;
+}

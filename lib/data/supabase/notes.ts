@@ -1,9 +1,15 @@
+import { supabaseInsertDecisions } from '@/lib/data/supabase/decisions';
+import { supabaseGetTagNamesForNotes, supabaseLinkTagsToNote } from '@/lib/data/supabase/tags';
+import { supabaseInsertTasks } from '@/lib/data/supabase/tasks';
+import { getOptionalUserId } from '@/lib/supabase/auth';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import { toDueDateOrNull } from '@/lib/utils/dates';
 import { toAppError } from '@/lib/utils/errors';
-import type { Note, NoteRow } from '@/types/note';
+import type { ProcessedNote } from '@/types/ai';
+import type { CreateTextNoteResult, NoteRow, NoteWithTags } from '@/types/note';
 import { mapNoteRow } from '@/types/note';
 
-export async function supabaseListNotesByProject(projectId: string): Promise<Note[]> {
+export async function supabaseListNotesByProject(projectId: string): Promise<NoteWithTags[]> {
   const { data, error } = await getSupabaseClient()
     .from('notes')
     .select('*')
@@ -11,5 +17,64 @@ export async function supabaseListNotesByProject(projectId: string): Promise<Not
     .order('created_at', { ascending: false });
 
   if (error) throw toAppError(error);
-  return (data as NoteRow[]).map(mapNoteRow);
+
+  const notes = (data as NoteRow[]).map(mapNoteRow);
+  const tagMap = await supabaseGetTagNamesForNotes(notes.map((note) => note.id));
+
+  return notes.map((note) => ({
+    ...note,
+    tags: tagMap.get(note.id) ?? [],
+  }));
+}
+
+export async function supabaseCreateTextNote(
+  projectId: string,
+  rawTranscript: string,
+  processed: ProcessedNote,
+): Promise<CreateTextNoteResult> {
+  const userId = await getOptionalUserId();
+
+  const { data, error } = await getSupabaseClient()
+    .from('notes')
+    .insert({
+      project_id: projectId,
+      user_id: userId,
+      raw_transcript: rawTranscript,
+      cleaned_note: processed.cleanedNote,
+      summary: processed.summary,
+      source: 'text',
+    })
+    .select('*')
+    .single();
+
+  if (error) throw toAppError(error);
+
+  const note = mapNoteRow(data as NoteRow);
+
+  const createdTasks = await supabaseInsertTasks(
+    projectId,
+    note.id,
+    processed.tasks.map((task) => ({
+      title: task.title,
+      dueDate: toDueDateOrNull(task.dueDate),
+    })),
+  );
+
+  const createdDecisions = await supabaseInsertDecisions(
+    projectId,
+    note.id,
+    processed.decisions.map((decision) => ({
+      title: decision.title,
+      reasoning: decision.reasoning,
+    })),
+  );
+
+  const tags = await supabaseLinkTagsToNote(projectId, note.id, processed.tags);
+
+  return {
+    ...note,
+    tags,
+    taskCount: createdTasks.length,
+    decisionCount: createdDecisions.length,
+  };
 }

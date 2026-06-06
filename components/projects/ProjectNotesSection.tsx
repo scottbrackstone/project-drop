@@ -1,14 +1,17 @@
-import { COPY } from '@/constants/copy';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { NoteTimeline } from '@/components/notes/NoteTimeline';
 import { SectionCard } from '@/components/ui/SectionCard';
+import { COPY } from '@/constants/copy';
+import type { NoteWithTags } from '@/types/note';
 
-export function ProjectNotesSection() {
+interface ProjectNotesSectionProps {
+  notes: NoteWithTags[];
+  loading: boolean;
+}
+
+export function ProjectNotesSection({ notes, loading }: ProjectNotesSectionProps) {
   return (
     <SectionCard title={COPY.projectDetail.notesTitle}>
-      <EmptyState
-        title={COPY.projectDetail.notesEmptyTitle}
-        description={COPY.projectDetail.notesEmptyDescription}
-      />
+      <NoteTimeline notes={notes} loading={loading} />
     </SectionCard>
   );
 }

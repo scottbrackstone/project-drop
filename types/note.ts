@@ -40,3 +40,12 @@ export function mapNoteRow(row: NoteRow): Note {
     updatedAt: row.updated_at,
   };
 }
+
+export interface NoteWithTags extends Note {
+  tags: string[];
+}
+
+export interface CreateTextNoteResult extends NoteWithTags {
+  taskCount: number;
+  decisionCount: number;
+}

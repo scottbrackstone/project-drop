@@ -21,3 +21,9 @@ export function formatDateTime(isoDate: string): string {
     minute: '2-digit',
   });
 }
+
+export function toDueDateOrNull(value: string | null): string | null {
+  if (!value) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  return null;
+}
