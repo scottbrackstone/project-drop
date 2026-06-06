@@ -4,10 +4,7 @@ export const ROUTES = {
   home: '/' as Href,
   projects: '/projects' as Href,
   projectsNew: '/projects/new' as Href,
-  projectDetail: (projectId: string): Href => ({
-    pathname: '/projects/[projectId]',
-    params: { projectId },
-  }),
+  projectDetail: (projectId: string): Href => `/projects/${projectId}` as Href,
   projectOutputs: (projectId: string): Href =>
     `/projects/${projectId}/outputs` as Href,
   projectSettings: (projectId: string): Href =>

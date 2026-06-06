@@ -1,15 +1,16 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ScrollView } from 'react-native';
 
 import { AppShell } from '@/components/layout/AppShell';
 import { SettingsMenu } from '@/components/settings/SettingsMenu';
 import { COPY } from '@/constants/copy';
 import { ROUTES } from '@/constants/routes';
+import { useProjectIdParam } from '@/hooks/useProjectIdParam';
 import { useScrollContentStyle } from '@/hooks/useScrollContentStyle';
 
 export default function ProjectSettingsIndexScreen() {
   const router = useRouter();
-  const { projectId } = useLocalSearchParams<{ projectId: string }>();
+  const projectId = useProjectIdParam();
   const { contentContainerStyle } = useScrollContentStyle({ gap: 0 });
 
   return (

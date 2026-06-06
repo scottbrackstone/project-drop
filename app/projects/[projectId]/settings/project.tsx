@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ScrollView } from 'react-native';
 
 import { ResourceScreenShell } from '@/components/layout/ResourceScreenShell';
@@ -8,6 +8,7 @@ import { COPY } from '@/constants/copy';
 import { ROUTES } from '@/constants/routes';
 import { useDeleteProject } from '@/hooks/useDeleteProject';
 import { useProject } from '@/hooks/useProject';
+import { useProjectIdParam } from '@/hooks/useProjectIdParam';
 import { useScrollContentStyle } from '@/hooks/useScrollContentStyle';
 import {
   clearRecentProjectId,
@@ -17,7 +18,7 @@ import { confirmDestructive } from '@/lib/utils/confirmDestructive';
 
 export default function ProjectProjectSettingsScreen() {
   const router = useRouter();
-  const { projectId } = useLocalSearchParams<{ projectId: string }>();
+  const projectId = useProjectIdParam();
   const { project, loading, error } = useProject(projectId);
 
   const { contentContainerStyle } = useScrollContentStyle();
@@ -59,7 +60,7 @@ export default function ProjectProjectSettingsScreen() {
       loading={loading}
       loadingLabel={COPY.projectDetail.loadingLabel}
       error={error}
-      notFound={!project}
+      notFound={!loading && !error && !project}
       notFoundTitle={COPY.projectDetail.notFoundTitle}
       notFoundDescription={COPY.projectDetail.notFoundDescription}
     >

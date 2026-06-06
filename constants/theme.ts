@@ -3,7 +3,9 @@ export const APP_NAME = 'ProjectDrop';
 export const COLORS = {
   primary: '#171717',
   primaryMuted: '#404040',
-  accent: '#0ea5e9',
+  accent: '#0284c7',
+  accentLight: '#e0f2fe',
+  accentMuted: '#38bdf8',
   spinner: '#171717',
   placeholder: '#a3a3a3',
   white: '#ffffff',
@@ -27,4 +29,6 @@ export const SPACING = {
   screenPadding: 16,
   sectionGap: 16,
   bottomExtra: 24,
+  cardPadding: 20,
+  cardPaddingCompact: 16,
 } as const;

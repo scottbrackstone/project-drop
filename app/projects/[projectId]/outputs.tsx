@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
 
 import { ResourceScreenShell } from '@/components/layout/ResourceScreenShell';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -11,6 +10,7 @@ import { useDeleteProjectOutput } from '@/hooks/useDeleteProjectOutput';
 import { useGenerateProjectOutput } from '@/hooks/useGenerateProjectOutput';
 import { useOutputModePreferences } from '@/hooks/useOutputModePreferences';
 import { useProject } from '@/hooks/useProject';
+import { useProjectIdParam } from '@/hooks/useProjectIdParam';
 import { useProjectOutputs } from '@/hooks/useProjectOutputs';
 import { useShareOutput } from '@/hooks/useShareOutput';
 import { confirmDestructive } from '@/lib/utils/confirmDestructive';
@@ -29,7 +29,7 @@ function toDisplayOutput(output: ProjectOutput): OutputDisplayItem {
 }
 
 export default function ProjectOutputsScreen() {
-  const { projectId } = useLocalSearchParams<{ projectId: string }>();
+  const projectId = useProjectIdParam();
   const { project, loading, error } = useProject(projectId);
   const { outputs, loading: outputsLoading, refresh: refreshOutputs } = useProjectOutputs(projectId);
   const { enabledModes, loading: prefsLoading } = useOutputModePreferences();
@@ -167,7 +167,7 @@ export default function ProjectOutputsScreen() {
       loading={shellLoading}
       loadingLabel={COPY.projectDetail.loadingLabel}
       error={error}
-      notFound={!project}
+      notFound={!loading && !error && !project}
       notFoundTitle={COPY.outputs.loadErrorTitle}
       notFoundDescription={COPY.projectDetail.notFoundDescription}
     >

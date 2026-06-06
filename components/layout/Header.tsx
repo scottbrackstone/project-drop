@@ -24,7 +24,7 @@ export function Header({
   const router = useRouter();
 
   return (
-    <View className="border-b border-neutral-100 bg-white px-4 py-3">
+    <View className="border-b border-neutral-100 bg-white px-5 py-4">
       <View className="flex-row items-start justify-between gap-3">
         <View className="min-w-0 flex-1">
           {showBack ? (

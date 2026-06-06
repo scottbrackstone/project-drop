@@ -18,9 +18,9 @@ export function ProjectDeleteSection({
   onDelete,
 }: ProjectDeleteSectionProps) {
   return (
-    <View className={`${SURFACES.dangerZone} gap-3`}>
+    <View className={`${SURFACES.dangerZone} gap-4`}>
       <Text className="text-base font-semibold text-red-900">{COPY.deleteProject.sectionTitle}</Text>
-      <Text className="text-sm leading-5 text-neutral-600">
+      <Text className="text-sm leading-6 text-neutral-600">
         {COPY.deleteProject.sectionDescription}
       </Text>
       <Text className="text-sm font-medium text-neutral-800">{projectName}</Text>

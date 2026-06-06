@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from 'react';
-import { useLocalSearchParams } from 'expo-router';
 
 import { ResourceScreenShell } from '@/components/layout/ResourceScreenShell';
 import { ProjectDetailContent } from '@/components/projects/ProjectDetailContent';
@@ -8,6 +7,7 @@ import { COPY } from '@/constants/copy';
 import { useCompleteTask } from '@/hooks/useCompleteTask';
 import { useCreateTextNote } from '@/hooks/useCreateTextNote';
 import { useDeleteNote } from '@/hooks/useDeleteNote';
+import { useProjectIdParam } from '@/hooks/useProjectIdParam';
 import type { CreateTextNoteOptions } from '@/types/note';
 import { useNotes } from '@/hooks/useNotes';
 import { useProject } from '@/hooks/useProject';
@@ -16,7 +16,7 @@ import { saveRecentProjectId } from '@/lib/settings/recentProject';
 import { confirmDestructive } from '@/lib/utils/confirmDestructive';
 
 export default function ProjectDetailScreen() {
-  const { projectId } = useLocalSearchParams<{ projectId: string }>();
+  const projectId = useProjectIdParam();
   const { project, loading, error } = useProject(projectId);
   const { notes, loading: notesLoading, refresh: refreshNotes } = useNotes(projectId);
   const { tasks, loading: tasksLoading, refresh: refreshTasks } = useProjectTasks(projectId);
@@ -90,7 +90,7 @@ export default function ProjectDetailScreen() {
       loading={loading}
       loadingLabel={COPY.projectDetail.loadingLabel}
       error={error}
-      notFound={!project}
+      notFound={!loading && !error && !project}
       notFoundTitle={COPY.projectDetail.notFoundTitle}
       notFoundDescription={COPY.projectDetail.notFoundDescription}
     >

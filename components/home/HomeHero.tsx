@@ -7,11 +7,9 @@ export function HomeHero() {
   const provider = getDataProvider();
 
   return (
-    <View className="gap-3">
-      <Text className="text-2xl font-bold leading-tight text-neutral-900">
-        {COPY.home.headline}
-      </Text>
-      <Text className="text-base leading-6 text-neutral-600">{COPY.home.body}</Text>
+    <View className="gap-4">
+      <Text className="text-2xl font-bold leading-9 text-neutral-900">{COPY.home.headline}</Text>
+      <Text className="text-base leading-7 text-neutral-600">{COPY.home.body}</Text>
       <Text className="text-xs text-neutral-400">
         Data mode: {formatDataModeLabel(provider)}
       </Text>

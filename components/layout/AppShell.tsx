@@ -30,7 +30,7 @@ export function AppShell({
         brand={brand}
         rightAction={headerRight}
       />
-      <View className="flex-1 px-4 pt-4">{children}</View>
+      <View className="flex-1 px-5 pt-4">{children}</View>
     </SafeAreaView>
   );
 }
