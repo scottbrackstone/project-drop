@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "notes-app",
-    "slug": "notes-app",
+    "name": "ProjectDrop",
+    "slug": "projectdrop",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

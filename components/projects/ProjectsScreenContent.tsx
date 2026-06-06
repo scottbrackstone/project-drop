@@ -1,0 +1,42 @@
+import { View } from 'react-native';
+import { useRouter } from 'expo-router';
+
+import { ScreenScroll } from '@/components/layout/ScreenScroll';
+import { ProjectList } from '@/components/projects/ProjectList';
+import { Button } from '@/components/ui/Button';
+import { COPY } from '@/constants/copy';
+import { ROUTES } from '@/constants/routes';
+import type { Project } from '@/types/project';
+
+interface ProjectsScreenContentProps {
+  projects: Project[];
+  loading: boolean;
+  error: string | null;
+  refreshing: boolean;
+  onRefresh: () => void;
+}
+
+export function ProjectsScreenContent({
+  projects,
+  loading,
+  error,
+  refreshing,
+  onRefresh,
+}: ProjectsScreenContentProps) {
+  const router = useRouter();
+  const navigateToCreate = () => router.push(ROUTES.projectsNew);
+
+  return (
+    <ScreenScroll refreshing={refreshing} onRefresh={onRefresh}>
+      <View>
+        <Button title={COPY.projects.createProject} onPress={navigateToCreate} />
+      </View>
+      <ProjectList
+        projects={projects}
+        loading={loading && !refreshing}
+        error={error}
+        onCreatePress={navigateToCreate}
+      />
+    </ScreenScroll>
+  );
+}
