@@ -5,7 +5,12 @@ import { getOptionalUserId } from '@/lib/supabase/auth';
 import { toDueDateOrNull } from '@/lib/utils/dates';
 import { generateId } from '@/lib/utils/id';
 import type { ProcessedNote } from '@/types/ai';
-import type { CreateTextNoteResult, Note, NoteWithTags } from '@/types/note';
+import type {
+  CreateTextNoteOptions,
+  CreateTextNoteResult,
+  Note,
+  NoteWithTags,
+} from '@/types/note';
 
 const notes = new Map<string, Note>();
 
@@ -23,9 +28,12 @@ export async function mockCreateTextNote(
   projectId: string,
   rawTranscript: string,
   processed: ProcessedNote,
+  options: CreateTextNoteOptions = {},
 ): Promise<CreateTextNoteResult> {
   const now = new Date().toISOString();
   const userId = await getOptionalUserId();
+  const audioUri = options.audioUri ?? null;
+  const hasAudio = Boolean(audioUri);
 
   const note: Note = {
     id: generateId(),
@@ -34,8 +42,8 @@ export async function mockCreateTextNote(
     rawTranscript,
     cleanedNote: processed.cleanedNote,
     summary: processed.summary,
-    audioUrl: null,
-    source: 'text',
+    audioUrl: audioUri,
+    source: hasAudio ? 'voice' : 'text',
     createdAt: now,
     updatedAt: now,
   };

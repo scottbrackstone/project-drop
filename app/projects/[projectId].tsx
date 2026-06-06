@@ -5,6 +5,7 @@ import { ResourceScreenShell } from '@/components/layout/ResourceScreenShell';
 import { ProjectDetailContent } from '@/components/projects/ProjectDetailContent';
 import { COPY } from '@/constants/copy';
 import { useCreateTextNote } from '@/hooks/useCreateTextNote';
+import type { CreateTextNoteOptions } from '@/types/note';
 import { useNotes } from '@/hooks/useNotes';
 import { useProject } from '@/hooks/useProject';
 import { useProjectTasks } from '@/hooks/useProjectTasks';
@@ -24,8 +25,8 @@ export default function ProjectDetailScreen() {
   });
 
   const handleSaveNote = useCallback(
-    async (transcript: string) => {
-      const result = await create(transcript);
+    async (transcript: string, options?: CreateTextNoteOptions) => {
+      const result = await create(transcript, options);
       return result !== null;
     },
     [create],

@@ -6,7 +6,12 @@ import { getSupabaseClient } from '@/lib/supabase/client';
 import { toDueDateOrNull } from '@/lib/utils/dates';
 import { toAppError } from '@/lib/utils/errors';
 import type { ProcessedNote } from '@/types/ai';
-import type { CreateTextNoteResult, NoteRow, NoteWithTags } from '@/types/note';
+import type {
+  CreateTextNoteOptions,
+  CreateTextNoteResult,
+  NoteRow,
+  NoteWithTags,
+} from '@/types/note';
 import { mapNoteRow } from '@/types/note';
 
 export async function supabaseListNotesByProject(projectId: string): Promise<NoteWithTags[]> {
@@ -31,8 +36,11 @@ export async function supabaseCreateTextNote(
   projectId: string,
   rawTranscript: string,
   processed: ProcessedNote,
+  options: CreateTextNoteOptions = {},
 ): Promise<CreateTextNoteResult> {
   const userId = await getOptionalUserId();
+  const audioUri = options.audioUri ?? null;
+  const hasAudio = Boolean(audioUri);
 
   const { data, error } = await getSupabaseClient()
     .from('notes')
@@ -42,7 +50,8 @@ export async function supabaseCreateTextNote(
       raw_transcript: rawTranscript,
       cleaned_note: processed.cleanedNote,
       summary: processed.summary,
-      source: 'text',
+      audio_url: audioUri,
+      source: hasAudio ? 'voice' : 'text',
     })
     .select('*')
     .single();

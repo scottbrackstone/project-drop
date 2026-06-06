@@ -56,6 +56,9 @@ export const COPY = {
     ready: 'Ready',
     permissionDenied:
       'Microphone access denied. Enable it in your device settings to record voice notes.',
+    transcriptLabel: 'Transcript for this recording',
+    transcriptPlaceholder: 'Type what you said…',
+    sourceBadge: 'Voice',
   },
   projectForm: {
     nameLabel: 'Project name',

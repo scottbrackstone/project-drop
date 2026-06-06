@@ -86,8 +86,9 @@ MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **
 
 - **Stage 1–2:** App shell, projects create/list/detail, Supabase schema
 - **Stage 3:** Text notes + mock AI processing (tasks, decisions, tags)
-- **Stage 4A (current):** Local voice recording on project detail (no transcription yet)
-- **Stage 4B:** Transcription + audio upload
+- **Stage 4A:** Local voice recording on project detail
+- **Stage 4B (current):** Manual voice transcript + local audio metadata (no auto-transcription yet)
+- **Stage 4C:** Auto-transcription + Supabase Storage upload
 - **Stage 5:** Project summary/report
 - **Stage 6:** Polish, tests, error handling
 

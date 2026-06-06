@@ -6,7 +6,7 @@ import {
 } from '@/lib/data/supabase/notes';
 import { withDataProvider } from '@/lib/data/withProvider';
 import { validateNoteTranscript } from '@/lib/utils/validation';
-import type { CreateTextNoteResult, NoteWithTags } from '@/types/note';
+import type { CreateTextNoteOptions, CreateTextNoteResult, NoteWithTags } from '@/types/note';
 
 export async function listNotesByProject(projectId: string): Promise<NoteWithTags[]> {
   return withDataProvider(
@@ -18,12 +18,13 @@ export async function listNotesByProject(projectId: string): Promise<NoteWithTag
 export async function createTextNote(
   projectId: string,
   transcript: string,
+  options: CreateTextNoteOptions = {},
 ): Promise<CreateTextNoteResult> {
   const rawTranscript = validateNoteTranscript(transcript);
   const processed = await processNote(rawTranscript);
 
   return withDataProvider(
-    () => mockCreateTextNote(projectId, rawTranscript, processed),
-    () => supabaseCreateTextNote(projectId, rawTranscript, processed),
+    () => mockCreateTextNote(projectId, rawTranscript, processed, options),
+    () => supabaseCreateTextNote(projectId, rawTranscript, processed, options),
   );
 }

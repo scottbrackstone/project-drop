@@ -1,9 +1,10 @@
 import { NoteCaptureForm } from '@/components/notes/NoteCaptureForm';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { COPY } from '@/constants/copy';
+import type { CreateTextNoteOptions } from '@/types/note';
 
 interface ProjectCaptureSectionProps {
-  onSubmit: (transcript: string) => Promise<boolean>;
+  onSubmit: (transcript: string, options?: CreateTextNoteOptions) => Promise<boolean>;
   submitting: boolean;
   error: string | null;
 }

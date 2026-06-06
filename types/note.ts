@@ -45,6 +45,10 @@ export interface NoteWithTags extends Note {
   tags: string[];
 }
 
+export interface CreateTextNoteOptions {
+  audioUri?: string | null;
+}
+
 export interface CreateTextNoteResult extends NoteWithTags {
   taskCount: number;
   decisionCount: number;

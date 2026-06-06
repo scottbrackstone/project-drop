@@ -5,7 +5,7 @@ import { ProjectNotesSection } from '@/components/projects/ProjectNotesSection';
 import { ProjectSummaryAction } from '@/components/projects/ProjectSummaryAction';
 import { ProjectTasksSection } from '@/components/projects/ProjectTasksSection';
 import { Badge } from '@/components/ui/Badge';
-import type { NoteWithTags } from '@/types/note';
+import type { CreateTextNoteOptions, NoteWithTags } from '@/types/note';
 import type { Project } from '@/types/project';
 import type { Task } from '@/types/task';
 
@@ -17,7 +17,7 @@ interface ProjectDetailContentProps {
   tasksLoading: boolean;
   savingNote: boolean;
   saveError: string | null;
-  onSaveNote: (transcript: string) => Promise<boolean>;
+  onSaveNote: (transcript: string, options?: CreateTextNoteOptions) => Promise<boolean>;
 }
 
 export function ProjectDetailContent({

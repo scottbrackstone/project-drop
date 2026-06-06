@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
 import { COPY } from '@/constants/copy';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
+import type { CreateTextNoteOptions } from '@/types/note';
 
 interface NoteCaptureFormProps {
-  onSubmit: (transcript: string) => Promise<boolean>;
+  onSubmit: (transcript: string, options?: CreateTextNoteOptions) => Promise<boolean>;
   submitting: boolean;
   error: string | null;
 }
@@ -16,10 +17,17 @@ interface NoteCaptureFormProps {
 export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureFormProps) {
   const [transcript, setTranscript] = useState('');
   const voice = useAudioRecorder();
+  const hasRecording = Boolean(voice.recordingUri);
 
   async function handleSubmit() {
-    const saved = await onSubmit(transcript);
-    if (saved) setTranscript('');
+    const options: CreateTextNoteOptions | undefined = voice.recordingUri
+      ? { audioUri: voice.recordingUri }
+      : undefined;
+    const saved = await onSubmit(transcript, options);
+    if (saved) {
+      setTranscript('');
+      await voice.discardRecording();
+    }
   }
 
   return (
@@ -39,14 +47,20 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
       />
 
       <View className="gap-2">
-        <Text className="text-sm font-medium text-neutral-700">
-          {COPY.projectDetail.textDivider}
-        </Text>
+        {!hasRecording ? (
+          <Text className="text-sm font-medium text-neutral-700">
+            {COPY.projectDetail.textDivider}
+          </Text>
+        ) : null}
         <Textarea
-          label={COPY.projectDetail.captureTitle}
+          label={hasRecording ? COPY.voice.transcriptLabel : COPY.projectDetail.captureTitle}
           value={transcript}
           onChangeText={setTranscript}
-          placeholder={COPY.projectDetail.capturePlaceholder}
+          placeholder={
+            hasRecording
+              ? COPY.voice.transcriptPlaceholder
+              : COPY.projectDetail.capturePlaceholder
+          }
           editable={!submitting}
         />
       </View>

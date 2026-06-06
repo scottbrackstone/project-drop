@@ -2,14 +2,17 @@ import { useCallback, useRef, useState } from 'react';
 
 import { createTextNote } from '@/lib/data/notes';
 import { getErrorMessage } from '@/lib/utils/errors';
-import type { CreateTextNoteResult } from '@/types/note';
+import type { CreateTextNoteOptions, CreateTextNoteResult } from '@/types/note';
 
 interface UseCreateTextNoteOptions {
   onSuccess?: (result: CreateTextNoteResult) => void | Promise<void>;
 }
 
 interface UseCreateTextNoteResult {
-  create: (transcript: string) => Promise<CreateTextNoteResult | null>;
+  create: (
+    transcript: string,
+    options?: CreateTextNoteOptions,
+  ) => Promise<CreateTextNoteResult | null>;
   submitting: boolean;
   error: string | null;
   clearError: () => void;
@@ -25,14 +28,17 @@ export function useCreateTextNote(
   onSuccessRef.current = options.onSuccess;
 
   const create = useCallback(
-    async (transcript: string): Promise<CreateTextNoteResult | null> => {
+    async (
+      transcript: string,
+      options: CreateTextNoteOptions = {},
+    ): Promise<CreateTextNoteResult | null> => {
       if (!projectId) return null;
 
       setSubmitting(true);
       setError(null);
 
       try {
-        const result = await createTextNote(projectId, transcript);
+        const result = await createTextNote(projectId, transcript, options);
         await onSuccessRef.current?.(result);
         return result;
       } catch (err) {
