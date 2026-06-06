@@ -1,2 +1,6 @@
 [functions.transcribe-audio]
 verify_jwt = false
+
+# MVP only — re-enable JWT verification and require auth before production.
+[functions.generate-project-output]
+verify_jwt = false

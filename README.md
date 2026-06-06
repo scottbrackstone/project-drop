@@ -144,7 +144,7 @@ MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **
 
 Generate formatted views from existing project notes, tasks, and decisions.
 
-**Output modes (mock formatters — no real LLM yet):**
+**Output modes:**
 
 | Mode | Purpose |
 |---|---|
@@ -163,7 +163,29 @@ Generate formatted views from existing project notes, tasks, and decisions.
 
 Flow: project detail → **Project outputs** → pick mode + scope → **Generate output** → preview appears → output auto-saves to the `reports` table → appears in recent outputs.
 
-Real LLM output generation is deferred to a later stage (`generate-project-output` Edge Function).
+**Mock mode:** rule-based local formatters (no API calls).
+
+**Supabase mode:** `generate-project-output` Edge Function calls **DeepSeek** server-side. If DeepSeek fails, the app shows an error and does **not** save fallback output.
+
+### DeepSeek output generation (Stage 5C)
+
+Set Edge Function secrets (never in the Expo app):
+
+```bash
+supabase secrets set DEEPSEEK_API_KEY=your-deepseek-key
+# Optional — defaults to deepseek-v4-flash
+supabase secrets set DEEPSEEK_MODEL=deepseek-v4-flash
+```
+
+Deploy:
+
+```bash
+supabase functions deploy generate-project-output --no-verify-jwt
+```
+
+**Default model:** `deepseek-v4-flash` (override with `DEEPSEEK_MODEL` secret).
+
+**MVP security:** `verify_jwt = false` allows anonymous output generation for testing. Before production: add auth, re-enable JWT verification, rate-limit DeepSeek usage, and tighten RLS.
 
 ### Reports migration
 
@@ -187,8 +209,8 @@ supabase db push
 - **Stage 4C:** Transcription provider abstraction + mock transcript button
 - **Stage 4D:** Remote transcription via Supabase Storage + Edge Function
 - **Stage 5A:** Project outputs — mock formatters, mode/scope selection, reports persistence
-- **Stage 5B (current):** Cleanup actions — complete task, delete note, delete project
-- **Stage 5C:** Real LLM output generation via Edge Function
+- **Stage 5B:** Cleanup actions — complete task, delete note, delete project
+- **Stage 5C (current):** DeepSeek-powered project outputs via Edge Function
 - **Stage 6:** Polish, tests, error handling
 
 ## Stage 4D manual test checklist
@@ -209,6 +231,23 @@ supabase db push
 4. Temporarily remove `MISTRAL_API_KEY` secret → tap transcribe → clear error shown (no mock fallback).
 5. Confirm no `MISTRAL_API_KEY` or `OPENAI_API_KEY` in client code or `EXPO_PUBLIC_*` env vars.
 6. Optional: set `TRANSCRIPTION_PROVIDER=openai` and `OPENAI_API_KEY` to verify legacy provider path.
+
+## Stage 5C manual test checklist
+
+### Mock mode
+
+1. Disable Supabase env vars.
+2. Generate **Project snapshot** → rule-based output still works.
+3. Confirm output history saves and reloads.
+
+### Supabase + DeepSeek
+
+1. Set `DEEPSEEK_API_KEY` secret and deploy `generate-project-output`.
+2. Add multiple messy notes with task and decision phrases.
+3. Generate each output mode — confirm combined, context-grounded text.
+4. Confirm failed DeepSeek (e.g. remove secret) shows error without saving mock fallback.
+5. Confirm Mistral transcription and Stage 5B cleanup actions still work.
+6. Confirm no `DEEPSEEK_API_KEY` in client code or `EXPO_PUBLIC_*` env vars.
 
 ## Stage 5B manual test checklist
 

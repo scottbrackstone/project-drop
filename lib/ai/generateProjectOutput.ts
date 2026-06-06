@@ -1,4 +1,5 @@
-import { isLlmConfigured, generateProjectOutputWithLlm } from '@/lib/ai/llmProvider';
+import { isRemoteOutputConfigured } from '@/lib/ai/outputConfig';
+import { generateProjectOutputWithLlm } from '@/lib/ai/llmProvider';
 import { mockGenerateProjectOutput } from '@/lib/ai/mockProjectOutput';
 import type {
   GeneratedProjectOutput,
@@ -10,9 +11,8 @@ export async function generateProjectOutput(
   context: ProjectContextBundle,
   mode: ProjectOutputMode,
 ): Promise<GeneratedProjectOutput> {
-  if (isLlmConfigured()) {
-    const llmResult = await generateProjectOutputWithLlm(context, mode);
-    if (llmResult) return llmResult;
+  if (isRemoteOutputConfigured()) {
+    return generateProjectOutputWithLlm(context, mode);
   }
 
   return mockGenerateProjectOutput(context, mode);

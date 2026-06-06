@@ -1,3 +1,4 @@
+import { generateProjectOutputRemote } from '@/lib/ai/remoteProjectOutput';
 import type { ProcessedNote } from '@/types/ai';
 import type {
   GeneratedProjectOutput,
@@ -6,7 +7,7 @@ import type {
 } from '@/types/projectOutput';
 
 /**
- * Future: call OpenAI or another LLM provider.
+ * Future: call OpenAI or another LLM provider for note processing.
  * Stage 3 uses mockProcessNote only — no API keys on device.
  */
 export async function processNoteWithLlm(_transcript: string): Promise<ProcessedNote | null> {
@@ -14,14 +15,14 @@ export async function processNoteWithLlm(_transcript: string): Promise<Processed
 }
 
 /**
- * Future: invoke generate-project-output Edge Function.
- * Stage 5A uses mock formatters only.
+ * Invokes generate-project-output Edge Function (DeepSeek server-side).
+ * Throws on failure — no silent fallback to mock formatters.
  */
 export async function generateProjectOutputWithLlm(
-  _context: ProjectContextBundle,
-  _mode: ProjectOutputMode,
-): Promise<GeneratedProjectOutput | null> {
-  return null;
+  context: ProjectContextBundle,
+  mode: ProjectOutputMode,
+): Promise<GeneratedProjectOutput> {
+  return generateProjectOutputRemote(context, mode);
 }
 
 export function isLlmConfigured(): boolean {
