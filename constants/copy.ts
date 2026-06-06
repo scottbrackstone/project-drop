@@ -44,6 +44,21 @@ export const COPY = {
     deleteNote: 'Delete',
     textDivider: 'Or type a note',
   },
+  settings: {
+    title: 'Project settings',
+    subtitle: 'Output preferences and project maintenance.',
+    settingsButton: 'Settings',
+    menuOutputSettings: 'Output settings',
+    menuOutputSettingsDescription: 'Choose which output modes appear when generating.',
+    menuProjectSettings: 'Project settings',
+    menuProjectSettingsDescription: 'Project details and delete project.',
+    outputSettingsTitle: 'Output settings',
+    outputSettingsDescription:
+      'Disabled modes are hidden from the generator. Saved output history is unchanged.',
+    projectSettingsTitle: 'Project settings',
+    projectSummaryTitle: 'Project summary',
+    lastModeWarning: 'At least one output mode must stay enabled.',
+  },
   deleteNote: {
     title: 'Delete note?',
     message: 'This note will be removed from the project timeline.',
@@ -113,6 +128,7 @@ export const COPY = {
     savedRecording: 'Recording saved on device',
     recording: 'Recording…',
     ready: 'Ready',
+    recordedStatus: 'Recorded',
     permissionDenied:
       'Microphone access denied. Enable it in your device settings to record voice notes.',
     transcriptLabel: 'Transcript for this recording',

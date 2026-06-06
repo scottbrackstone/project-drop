@@ -1,4 +1,11 @@
-import { ActivityIndicator, Pressable, Text, type PressableProps } from 'react-native';
+import { useRef } from 'react';
+import {
+  ActivityIndicator,
+  Animated,
+  Pressable,
+  Text,
+  type PressableProps,
+} from 'react-native';
 
 import { COLORS } from '@/constants/theme';
 
@@ -37,23 +44,45 @@ export function Button({
   loading = false,
   disabled,
   className = '',
+  onPressIn,
+  onPressOut,
   ...props
 }: ButtonProps) {
   const isDisabled = disabled || loading;
   const spinnerColor = variant === 'primary' ? COLORS.white : COLORS.primary;
+  const scale = useRef(new Animated.Value(1)).current;
+
+  function animateTo(value: number) {
+    Animated.spring(scale, {
+      toValue: value,
+      useNativeDriver: true,
+      speed: 50,
+      bounciness: 0,
+    }).start();
+  }
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      disabled={isDisabled}
-      className={`rounded-xl items-center justify-center ${variantClasses[variant]} ${sizeClasses[size]} ${isDisabled ? 'opacity-50' : ''} ${className}`}
-      {...props}
-    >
-      {loading ? (
-        <ActivityIndicator color={spinnerColor} />
-      ) : (
-        <Text className={`text-base font-semibold ${textClasses[variant]}`}>{title}</Text>
-      )}
-    </Pressable>
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <Pressable
+        accessibilityRole="button"
+        disabled={isDisabled}
+        onPressIn={(event) => {
+          if (!isDisabled) animateTo(0.98);
+          onPressIn?.(event);
+        }}
+        onPressOut={(event) => {
+          if (!isDisabled) animateTo(1);
+          onPressOut?.(event);
+        }}
+        className={`rounded-xl items-center justify-center ${variantClasses[variant]} ${sizeClasses[size]} ${isDisabled ? 'opacity-50' : ''} ${className}`}
+        {...props}
+      >
+        {loading ? (
+          <ActivityIndicator color={spinnerColor} />
+        ) : (
+          <Text className={`text-base font-semibold ${textClasses[variant]}`}>{title}</Text>
+        )}
+      </Pressable>
+    </Animated.View>
   );
 }

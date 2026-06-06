@@ -1,14 +1,12 @@
 import { useCallback } from 'react';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
 import { ResourceScreenShell } from '@/components/layout/ResourceScreenShell';
 import { ProjectDetailContent } from '@/components/projects/ProjectDetailContent';
 import { COPY } from '@/constants/copy';
-import { ROUTES } from '@/constants/routes';
 import { useCompleteTask } from '@/hooks/useCompleteTask';
 import { useCreateTextNote } from '@/hooks/useCreateTextNote';
 import { useDeleteNote } from '@/hooks/useDeleteNote';
-import { useDeleteProject } from '@/hooks/useDeleteProject';
 import type { CreateTextNoteOptions } from '@/types/note';
 import { useNotes } from '@/hooks/useNotes';
 import { useProject } from '@/hooks/useProject';
@@ -16,7 +14,6 @@ import { useProjectTasks } from '@/hooks/useProjectTasks';
 import { confirmDestructive } from '@/lib/utils/confirmDestructive';
 
 export default function ProjectDetailScreen() {
-  const router = useRouter();
   const { projectId } = useLocalSearchParams<{ projectId: string }>();
   const { project, loading, error } = useProject(projectId);
   const { notes, loading: notesLoading, refresh: refreshNotes } = useNotes(projectId);
@@ -45,16 +42,6 @@ export default function ProjectDetailScreen() {
       await Promise.all([refreshNotes(), refreshTasks()]);
     },
   });
-
-  const handleDeleteSuccess = useCallback(() => {
-    router.replace(ROUTES.projects);
-  }, [router]);
-
-  const {
-    remove: removeProject,
-    deleting: deletingProject,
-    error: deleteProjectError,
-  } = useDeleteProject({ onSuccess: handleDeleteSuccess });
 
   const handleSaveNote = useCallback(
     async (transcript: string, options?: CreateTextNoteOptions) => {
@@ -86,22 +73,6 @@ export default function ProjectDetailScreen() {
     [removeNote],
   );
 
-  const handleDeleteProject = useCallback(() => {
-    if (!project) return;
-
-    confirmDestructive({
-      title: COPY.deleteProject.title,
-      message: COPY.deleteProject.message(project.name),
-      cancelLabel: COPY.common.cancel,
-      confirmLabel: COPY.deleteProject.confirm,
-      onConfirm: () => {
-        if (projectId) {
-          void removeProject(projectId);
-        }
-      },
-    });
-  }, [project, projectId, removeProject]);
-
   return (
     <ResourceScreenShell
       title={project?.name ?? COPY.projectDetail.loadingTitle}
@@ -127,12 +98,9 @@ export default function ProjectDetailScreen() {
           completeTaskError={completeTaskError}
           deletingNoteId={deletingNoteId}
           deleteNoteError={deleteNoteError}
-          deletingProject={deletingProject}
-          deleteProjectError={deleteProjectError}
           onSaveNote={handleSaveNote}
           onCompleteTask={handleCompleteTask}
           onDeleteNote={handleDeleteNote}
-          onDeleteProject={handleDeleteProject}
         />
       ) : null}
     </ResourceScreenShell>

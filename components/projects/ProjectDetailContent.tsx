@@ -1,9 +1,8 @@
 import { ScrollView, View } from 'react-native';
 
 import { ProjectCaptureSection } from '@/components/projects/ProjectCaptureSection';
-import { ProjectDeleteSection } from '@/components/projects/ProjectDeleteSection';
+import { ProjectDetailActions } from '@/components/projects/ProjectDetailActions';
 import { ProjectNotesSection } from '@/components/projects/ProjectNotesSection';
-import { ProjectOutputsAction } from '@/components/projects/ProjectOutputsAction';
 import { ProjectTasksSection } from '@/components/projects/ProjectTasksSection';
 import { Badge } from '@/components/ui/Badge';
 import type { CreateTextNoteOptions, NoteWithTags } from '@/types/note';
@@ -22,12 +21,9 @@ interface ProjectDetailContentProps {
   completeTaskError: string | null;
   deletingNoteId: string | null;
   deleteNoteError: string | null;
-  deletingProject: boolean;
-  deleteProjectError: string | null;
   onSaveNote: (transcript: string, options?: CreateTextNoteOptions) => Promise<boolean>;
   onCompleteTask: (taskId: string) => void;
   onDeleteNote: (noteId: string) => void;
-  onDeleteProject: () => void;
 }
 
 export function ProjectDetailContent({
@@ -42,12 +38,9 @@ export function ProjectDetailContent({
   completeTaskError,
   deletingNoteId,
   deleteNoteError,
-  deletingProject,
-  deleteProjectError,
   onSaveNote,
   onCompleteTask,
   onDeleteNote,
-  onDeleteProject,
 }: ProjectDetailContentProps) {
   return (
     <ScrollView className="flex-1" contentContainerClassName="gap-4 pb-8">
@@ -74,13 +67,7 @@ export function ProjectDetailContent({
         noteError={deleteNoteError}
         onDeleteNote={onDeleteNote}
       />
-      <ProjectOutputsAction projectId={project.id} />
-      <ProjectDeleteSection
-        projectName={project.name}
-        deleting={deletingProject}
-        error={deleteProjectError}
-        onDelete={onDeleteProject}
-      />
+      <ProjectDetailActions projectId={project.id} />
     </ScrollView>
   );
 }

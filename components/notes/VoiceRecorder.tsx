@@ -7,7 +7,7 @@ import { formatRecordingDuration } from '@/lib/audio/recorder';
 
 interface VoiceRecorderProps {
   isRecording: boolean;
-  durationMillis: number;
+  displayDurationMillis: number;
   recordingUri: string | null;
   permissionDenied: boolean;
   isBusy: boolean;
@@ -19,7 +19,7 @@ interface VoiceRecorderProps {
 
 export function VoiceRecorder({
   isRecording,
-  durationMillis,
+  displayDurationMillis,
   recordingUri,
   permissionDenied,
   isBusy,
@@ -29,6 +29,12 @@ export function VoiceRecorder({
   onDiscard,
 }: VoiceRecorderProps) {
   const showPlayback = Boolean(recordingUri) && !isRecording;
+  const durationLabel = formatRecordingDuration(displayDurationMillis);
+  const statusLabel = isRecording
+    ? COPY.voice.recording
+    : showPlayback
+      ? COPY.voice.recordedStatus
+      : COPY.voice.ready;
 
   return (
     <View className="gap-3">
@@ -40,12 +46,8 @@ export function VoiceRecorder({
       ) : null}
 
       <View className="flex-row items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3">
-        <Text className="text-base font-mono text-neutral-900">
-          {formatRecordingDuration(durationMillis)}
-        </Text>
-        <Text className="text-sm text-neutral-500">
-          {isRecording ? COPY.voice.recording : COPY.voice.ready}
-        </Text>
+        <Text className="text-base font-mono text-neutral-900">{durationLabel}</Text>
+        <Text className="text-sm text-neutral-500">{statusLabel}</Text>
       </View>
 
       <View className="flex-row gap-2">

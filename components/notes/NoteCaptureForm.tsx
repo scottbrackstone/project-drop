@@ -64,7 +64,7 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
 
       <VoiceRecorder
         isRecording={voice.isRecording}
-        durationMillis={voice.durationMillis}
+        displayDurationMillis={voice.displayDurationMillis}
         recordingUri={voice.recordingUri}
         permissionDenied={voice.permissionDenied}
         isBusy={voice.isBusy}

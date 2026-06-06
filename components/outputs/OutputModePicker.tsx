@@ -1,18 +1,24 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { getOutputModeDescription, getOutputModeLabel } from '@/constants/copy';
-import { PROJECT_OUTPUT_MODES, type ProjectOutputMode } from '@/types/projectOutput';
+import type { ProjectOutputMode } from '@/types/projectOutput';
 
 interface OutputModePickerProps {
+  modes: ProjectOutputMode[];
   value: ProjectOutputMode;
   onChange: (mode: ProjectOutputMode) => void;
   disabled?: boolean;
 }
 
-export function OutputModePicker({ value, onChange, disabled = false }: OutputModePickerProps) {
+export function OutputModePicker({
+  modes,
+  value,
+  onChange,
+  disabled = false,
+}: OutputModePickerProps) {
   return (
     <View className="gap-2">
-      {PROJECT_OUTPUT_MODES.map((mode) => {
+      {modes.map((mode) => {
         const selected = mode === value;
         return (
           <Pressable

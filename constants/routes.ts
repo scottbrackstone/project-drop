@@ -10,4 +10,10 @@ export const ROUTES = {
   }),
   projectOutputs: (projectId: string): Href =>
     `/projects/${projectId}/outputs` as Href,
+  projectSettings: (projectId: string): Href =>
+    `/projects/${projectId}/settings` as Href,
+  projectOutputSettings: (projectId: string): Href =>
+    `/projects/${projectId}/settings/outputs` as Href,
+  projectProjectSettings: (projectId: string): Href =>
+    `/projects/${projectId}/settings/project` as Href,
 } as const;

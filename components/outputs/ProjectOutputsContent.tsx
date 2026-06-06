@@ -8,6 +8,7 @@ import type { GeneratedProjectOutput, ProjectOutputMode, ProjectOutputScope } fr
 import type { ProjectOutput } from '@/types/report';
 
 interface ProjectOutputsContentProps {
+  enabledModes: ProjectOutputMode[];
   mode: ProjectOutputMode;
   scope: ProjectOutputScope;
   generating: boolean;
@@ -21,6 +22,7 @@ interface ProjectOutputsContentProps {
 }
 
 export function ProjectOutputsContent({
+  enabledModes,
   mode,
   scope,
   generating,
@@ -45,6 +47,7 @@ export function ProjectOutputsContent({
   return (
     <ScrollView className="flex-1" contentContainerClassName="gap-4 pb-8">
       <OutputGeneratorPanel
+        enabledModes={enabledModes}
         mode={mode}
         scope={scope}
         generating={generating}

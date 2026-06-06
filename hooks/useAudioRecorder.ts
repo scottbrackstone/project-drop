@@ -14,7 +14,7 @@ import { getErrorMessage } from '@/lib/utils/errors';
 
 interface UseAudioRecorderResult {
   isRecording: boolean;
-  durationMillis: number;
+  displayDurationMillis: number;
   recordingUri: string | null;
   permission: MicrophonePermissionState;
   permissionDenied: boolean;
@@ -30,6 +30,7 @@ export function useAudioRecorder(): UseAudioRecorderResult {
   const recorder = useExpoAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(recorder);
   const [recordingUri, setRecordingUri] = useState<string | null>(null);
+  const [savedDurationMillis, setSavedDurationMillis] = useState(0);
   const [permission, setPermission] = useState<MicrophonePermissionState>('undetermined');
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +54,7 @@ export function useAudioRecorder(): UseAudioRecorderResult {
 
       await configureRecordingAudioMode();
       setRecordingUri(null);
+      setSavedDurationMillis(0);
       await recorder.prepareToRecordAsync();
       recorder.record();
     } catch (err) {
@@ -69,14 +71,16 @@ export function useAudioRecorder(): UseAudioRecorderResult {
     setError(null);
 
     try {
+      const durationMillis = recorderState.durationMillis;
       await recorder.stop();
+      setSavedDurationMillis(durationMillis);
       setRecordingUri(recorder.uri ?? null);
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
       setIsBusy(false);
     }
-  }, [recorder, recorderState.isRecording]);
+  }, [recorder, recorderState.durationMillis, recorderState.isRecording]);
 
   const discardRecording = useCallback(async () => {
     setIsBusy(true);
@@ -87,6 +91,7 @@ export function useAudioRecorder(): UseAudioRecorderResult {
         await recorder.stop();
       }
       setRecordingUri(null);
+      setSavedDurationMillis(0);
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -96,9 +101,13 @@ export function useAudioRecorder(): UseAudioRecorderResult {
 
   const clearError = useCallback(() => setError(null), []);
 
+  const displayDurationMillis = recorderState.isRecording
+    ? recorderState.durationMillis
+    : savedDurationMillis;
+
   return {
     isRecording: recorderState.isRecording,
-    durationMillis: recorderState.durationMillis,
+    displayDurationMillis,
     recordingUri,
     permission,
     permissionDenied: permission === 'denied',

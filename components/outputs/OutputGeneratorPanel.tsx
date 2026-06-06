@@ -8,6 +8,7 @@ import { COPY } from '@/constants/copy';
 import type { ProjectOutputMode, ProjectOutputScope } from '@/types/projectOutput';
 
 interface OutputGeneratorPanelProps {
+  enabledModes: ProjectOutputMode[];
   mode: ProjectOutputMode;
   scope: ProjectOutputScope;
   generating: boolean;
@@ -18,6 +19,7 @@ interface OutputGeneratorPanelProps {
 }
 
 export function OutputGeneratorPanel({
+  enabledModes,
   mode,
   scope,
   generating,
@@ -30,7 +32,12 @@ export function OutputGeneratorPanel({
     <SectionCard title={COPY.outputs.generatorTitle}>
       <View className="gap-2">
         <Text className="text-sm font-medium text-neutral-700">{COPY.outputs.modeLabel}</Text>
-        <OutputModePicker value={mode} onChange={onModeChange} disabled={generating} />
+        <OutputModePicker
+          modes={enabledModes}
+          value={mode}
+          onChange={onModeChange}
+          disabled={generating}
+        />
       </View>
       <View className="gap-2">
         <Text className="text-sm font-medium text-neutral-700">{COPY.outputs.scopeLabel}</Text>
