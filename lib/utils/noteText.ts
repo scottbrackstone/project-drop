@@ -14,9 +14,10 @@ export function formatNoteForCopy(note: NoteWithTags, includeTranscript: boolean
   const transcript = note.rawTranscript?.trim();
   const cleaned = note.cleanedNote?.trim();
   const shouldIncludeTranscript =
-    includeTranscript && transcript && transcript !== cleaned;
+    Boolean(transcript && transcript !== cleaned) &&
+    (includeTranscript || !cleaned);
 
-  if (shouldIncludeTranscript) {
+  if (shouldIncludeTranscript && transcript) {
     if (lines.at(-1) !== '') lines.push('');
     lines.push('Transcript:', transcript);
   }
