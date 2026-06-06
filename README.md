@@ -72,11 +72,25 @@ lib/data/            Data access + provider switching
 lib/data/mock/       Mock persistence
 lib/data/supabase/   Supabase queries
 lib/supabase/        Client setup and auth helpers
+lib/transcription/   Audio URI → transcript (mock now; Edge Functions later)
+lib/ai/              Transcript text → structured project memory
+lib/audio/           Local recording and playback
 lib/utils/           Pure helpers
 types/               Shared TypeScript types
 docs/                Coding rules and documentation
 supabase/            Migrations and Edge Functions (Stage 3+)
 ```
+
+## Voice pipeline
+
+ProjectDrop splits voice capture into two layers:
+
+| Layer | Location | Input → output |
+|---|---|---|
+| **Transcription** | `lib/transcription/` | Audio URI → plain transcript text |
+| **AI processing** | `lib/ai/` | Transcript text → tasks, decisions, tags, summary |
+
+**Stage 4C** adds a mock transcription button after recording. It fills the transcript field with clearly labelled test text. Real transcription is **not** implemented yet — it should run through **Supabase Edge Functions** later so API keys never ship on-device. **Supabase Storage upload** for audio is also not implemented yet.
 
 ## Security note
 
@@ -87,8 +101,9 @@ MVP RLS policies (`mvp_allow_all_*`) allow open access for local development. **
 - **Stage 1–2:** App shell, projects create/list/detail, Supabase schema
 - **Stage 3:** Text notes + mock AI processing (tasks, decisions, tags)
 - **Stage 4A:** Local voice recording on project detail
-- **Stage 4B (current):** Manual voice transcript + local audio metadata (no auto-transcription yet)
-- **Stage 4C:** Auto-transcription + Supabase Storage upload
+- **Stage 4B:** Manual voice transcript + local audio metadata
+- **Stage 4C (current):** Transcription provider abstraction + mock transcript button
+- **Stage 4D:** Real transcription via Supabase Edge Functions + Storage upload
 - **Stage 5:** Project summary/report
 - **Stage 6:** Polish, tests, error handling
 

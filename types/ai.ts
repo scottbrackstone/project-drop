@@ -16,8 +16,11 @@ export interface ProcessedNote {
   tags: string[];
 }
 
+export type TranscriptionSource = 'mock' | 'remote';
+
 export interface TranscriptionResult {
   transcript: string;
+  source: TranscriptionSource;
 }
 
 export interface ProjectSummaryResult {

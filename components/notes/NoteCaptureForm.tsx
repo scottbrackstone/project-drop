@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { VoiceRecorder } from '@/components/notes/VoiceRecorder';
+import { VoiceTranscriptActions } from '@/components/notes/VoiceTranscriptActions';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
 import { COPY } from '@/constants/copy';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
+import { useTranscribeRecording } from '@/hooks/useTranscribeRecording';
 import type { CreateTextNoteOptions } from '@/types/note';
 
 interface NoteCaptureFormProps {
@@ -16,8 +18,32 @@ interface NoteCaptureFormProps {
 
 export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureFormProps) {
   const [transcript, setTranscript] = useState('');
+  const [showMockWarning, setShowMockWarning] = useState(false);
   const voice = useAudioRecorder();
+  const transcription = useTranscribeRecording();
   const hasRecording = Boolean(voice.recordingUri);
+  const hasTranscriptText = Boolean(transcript.trim());
+
+  function clearTranscriptState() {
+    setTranscript('');
+    setShowMockWarning(false);
+    transcription.clearError();
+  }
+
+  async function handleDiscard() {
+    await voice.discardRecording();
+    clearTranscriptState();
+  }
+
+  async function handleUseMockTranscript() {
+    if (!voice.recordingUri || hasTranscriptText) return;
+
+    const result = await transcription.transcribe(voice.recordingUri);
+    if (!result) return;
+
+    setTranscript(result.transcript);
+    setShowMockWarning(result.source === 'mock');
+  }
 
   async function handleSubmit() {
     const options: CreateTextNoteOptions | undefined = voice.recordingUri
@@ -25,7 +51,7 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
       : undefined;
     const saved = await onSubmit(transcript, options);
     if (saved) {
-      setTranscript('');
+      clearTranscriptState();
       await voice.discardRecording();
     }
   }
@@ -43,8 +69,19 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
         error={voice.error}
         onStart={() => void voice.startRecording()}
         onStop={() => void voice.stopRecording()}
-        onDiscard={() => void voice.discardRecording()}
+        onDiscard={() => void handleDiscard()}
       />
+
+      {hasRecording ? (
+        <VoiceTranscriptActions
+          onUseMockTranscript={() => void handleUseMockTranscript()}
+          transcribing={transcription.transcribing}
+          error={transcription.error}
+          showMockWarning={showMockWarning}
+          mockDisabled={hasTranscriptText}
+          disabled={submitting || voice.isBusy}
+        />
+      ) : null}
 
       <View className="gap-2">
         {!hasRecording ? (
@@ -61,7 +98,7 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
               ? COPY.voice.transcriptPlaceholder
               : COPY.projectDetail.capturePlaceholder
           }
-          editable={!submitting}
+          editable={!submitting && !transcription.transcribing}
         />
       </View>
 
@@ -70,7 +107,7 @@ export function NoteCaptureForm({ onSubmit, submitting, error }: NoteCaptureForm
         title={submitting ? COPY.projectDetail.captureProcessing : COPY.projectDetail.captureButton}
         onPress={() => void handleSubmit()}
         loading={submitting}
-        disabled={!transcript.trim()}
+        disabled={!transcript.trim() || transcription.transcribing}
       />
     </View>
   );

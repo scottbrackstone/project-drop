@@ -59,6 +59,12 @@ export const COPY = {
     transcriptLabel: 'Transcript for this recording',
     transcriptPlaceholder: 'Type what you said…',
     sourceBadge: 'Voice',
+    useMockTranscript: 'Use mock transcript',
+    transcribingMock: 'Generating mock transcript…',
+    mockTranscriptWarning:
+      'This is mock transcription text for testing. Edit it before saving.',
+    mockTranscriptDisabledHint:
+      'Clear the transcript field first if you want to use mock transcription.',
   },
   projectForm: {
     nameLabel: 'Project name',
