@@ -3,6 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 
 import { ResourceScreenShell } from '@/components/layout/ResourceScreenShell';
 import { ProjectDetailContent } from '@/components/projects/ProjectDetailContent';
+import { ProjectHeaderActions } from '@/components/projects/ProjectHeaderActions';
 import { COPY } from '@/constants/copy';
 import { useCompleteTask } from '@/hooks/useCompleteTask';
 import { useCreateTextNote } from '@/hooks/useCreateTextNote';
@@ -85,6 +86,7 @@ export default function ProjectDetailScreen() {
       title={project?.name ?? COPY.projectDetail.loadingTitle}
       showBack
       subtitle={project?.description ?? undefined}
+      headerRight={project ? <ProjectHeaderActions projectId={project.id} /> : undefined}
       loading={loading}
       loadingLabel={COPY.projectDetail.loadingLabel}
       error={error}

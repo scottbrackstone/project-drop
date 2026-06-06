@@ -11,8 +11,8 @@ interface SettingsMenuProps {
 export function SettingsMenu({ onOutputSettings, onProjectSettings }: SettingsMenuProps) {
   return (
     <View className="gap-4">
-      <Text className="text-sm text-neutral-600">{COPY.settings.subtitle}</Text>
-      <View className="gap-3">
+      <Text className="text-sm leading-5 text-neutral-500">{COPY.settings.subtitle}</Text>
+      <View className="gap-2">
         <SettingsMenuItem
           title={COPY.settings.menuOutputSettings}
           description={COPY.settings.menuOutputSettingsDescription}

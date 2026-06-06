@@ -8,6 +8,7 @@ interface ResourceScreenShellProps {
   title: string;
   showBack?: boolean;
   subtitle?: string;
+  headerRight?: ReactNode;
   loading: boolean;
   loadingLabel: string;
   error: string | null;
@@ -21,6 +22,7 @@ export function ResourceScreenShell({
   title,
   showBack = true,
   subtitle,
+  headerRight,
   loading,
   loadingLabel,
   error,
@@ -29,9 +31,11 @@ export function ResourceScreenShell({
   notFoundDescription,
   children,
 }: ResourceScreenShellProps) {
+  const shellProps = { title, showBack, subtitle, headerRight };
+
   if (loading) {
     return (
-      <AppShell title={title} showBack={showBack} subtitle={subtitle}>
+      <AppShell {...shellProps}>
         <LoadingSpinner label={loadingLabel} />
       </AppShell>
     );
@@ -39,18 +43,11 @@ export function ResourceScreenShell({
 
   if (error || notFound) {
     return (
-      <AppShell title={title} showBack={showBack} subtitle={subtitle}>
-        <EmptyState
-          title={notFoundTitle}
-          description={error ?? notFoundDescription}
-        />
+      <AppShell {...shellProps}>
+        <EmptyState title={notFoundTitle} description={error ?? notFoundDescription} />
       </AppShell>
     );
   }
 
-  return (
-    <AppShell title={title} showBack={showBack} subtitle={subtitle}>
-      {children}
-    </AppShell>
-  );
+  return <AppShell {...shellProps}>{children}</AppShell>;
 }

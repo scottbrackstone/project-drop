@@ -17,22 +17,24 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <Pressable onPress={() => router.push(ROUTES.projectDetail(project.id))}>
-      <Card className="gap-2">
-        <View className="flex-row items-center justify-between gap-3">
+      <Card className="gap-3 active:bg-neutral-50">
+        <View className="flex-row items-start justify-between gap-3">
           <Text className="flex-1 text-lg font-semibold text-neutral-900">{project.name}</Text>
           <Badge label={project.status} />
         </View>
         {project.description ? (
-          <Text className="text-base text-neutral-600" numberOfLines={2}>
+          <Text className="text-sm leading-5 text-neutral-600" numberOfLines={2}>
             {project.description}
           </Text>
         ) : null}
-        <Text className="text-sm text-neutral-600">
-          {formatProjectStatsLine(project.noteCount, project.openTaskCount)}
-        </Text>
-        <Text className="text-sm text-neutral-500">
-          Updated {formatRelativeDate(project.updatedAt)}
-        </Text>
+        <View className="flex-row items-center justify-between gap-2">
+          <Text className="text-sm font-medium text-neutral-700">
+            {formatProjectStatsLine(project.noteCount, project.openTaskCount)}
+          </Text>
+          <Text className="text-xs text-neutral-400">
+            Updated {formatRelativeDate(project.updatedAt)}
+          </Text>
+        </View>
       </Card>
     </Pressable>
   );

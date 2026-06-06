@@ -8,6 +8,7 @@ import { COPY } from '@/constants/copy';
 import { ROUTES } from '@/constants/routes';
 import { useDeleteProject } from '@/hooks/useDeleteProject';
 import { useProject } from '@/hooks/useProject';
+import { useScrollContentStyle } from '@/hooks/useScrollContentStyle';
 import {
   clearRecentProjectId,
   loadRecentProjectId,
@@ -18,6 +19,8 @@ export default function ProjectProjectSettingsScreen() {
   const router = useRouter();
   const { projectId } = useLocalSearchParams<{ projectId: string }>();
   const { project, loading, error } = useProject(projectId);
+
+  const { contentContainerStyle } = useScrollContentStyle();
 
   const handleDeleteSuccess = useCallback(async () => {
     const recentId = await loadRecentProjectId();
@@ -61,7 +64,7 @@ export default function ProjectProjectSettingsScreen() {
       notFoundDescription={COPY.projectDetail.notFoundDescription}
     >
       {project ? (
-        <ScrollView className="flex-1" contentContainerClassName="pb-8">
+        <ScrollView className="flex-1" contentContainerStyle={contentContainerStyle}>
           <ProjectSettingsContent
             project={project}
             deleting={deleting}

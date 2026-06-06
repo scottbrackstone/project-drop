@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native';
 import { OutputGeneratorPanel } from '@/components/outputs/OutputGeneratorPanel';
 import { OutputHistoryList } from '@/components/outputs/OutputHistoryList';
 import { OutputPreview, type OutputDisplayItem } from '@/components/outputs/OutputPreview';
+import { useScrollContentStyle } from '@/hooks/useScrollContentStyle';
 import type { ProjectOutputMode, ProjectOutputScope } from '@/types/projectOutput';
 import type { ProjectOutput } from '@/types/report';
 
@@ -52,10 +53,11 @@ export function ProjectOutputsContent({
   onRegenerate,
   onDelete,
 }: ProjectOutputsContentProps) {
+  const { contentContainerStyle } = useScrollContentStyle();
   const isDeleting = Boolean(displayOutput?.id && deletingOutputId === displayOutput.id);
 
   return (
-    <ScrollView className="flex-1" contentContainerClassName="gap-4 pb-8">
+    <ScrollView className="flex-1" contentContainerStyle={contentContainerStyle}>
       <OutputGeneratorPanel
         enabledModes={enabledModes}
         mode={mode}

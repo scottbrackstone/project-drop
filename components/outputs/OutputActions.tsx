@@ -29,7 +29,7 @@ export function OutputActions({
   return (
     <View className="gap-2">
       <View className="flex-row flex-wrap gap-2">
-        <View className="min-w-[30%] flex-1">
+        <View className="min-w-[45%] flex-1">
           <Button
             title={copied ? COPY.outputs.actions.copied : COPY.outputs.actions.copy}
             variant="secondary"
@@ -38,7 +38,7 @@ export function OutputActions({
             disabled={generating || deleting}
           />
         </View>
-        <View className="min-w-[30%] flex-1">
+        <View className="min-w-[45%] flex-1">
           <Button
             title={COPY.outputs.actions.share}
             variant="secondary"
@@ -47,7 +47,7 @@ export function OutputActions({
             disabled={generating || deleting}
           />
         </View>
-        <View className="min-w-[30%] flex-1">
+        <View className="min-w-[45%] flex-1">
           <Button
             title={COPY.outputs.actions.regenerate}
             variant="secondary"
@@ -58,15 +58,14 @@ export function OutputActions({
           />
         </View>
         {canDelete ? (
-          <View className="min-w-[30%] flex-1">
+          <View className="min-w-[45%] flex-1">
             <Button
               title={COPY.outputs.actions.delete}
-              variant="ghost"
+              variant="danger"
               size="sm"
               onPress={onDelete}
               loading={deleting}
               disabled={generating || deleting}
-              className="border border-red-200 bg-red-50"
             />
           </View>
         ) : null}

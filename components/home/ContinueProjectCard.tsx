@@ -15,13 +15,13 @@ export function ContinueProjectCard({ project }: ContinueProjectCardProps) {
 
   return (
     <Pressable onPress={() => router.push(ROUTES.projectDetail(project.id))}>
-      <Card className="gap-1 border-neutral-300 bg-neutral-50">
-        <Text className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+      <Card className="gap-1 border-neutral-200 bg-white active:bg-neutral-50">
+        <Text className="text-xs font-semibold uppercase tracking-wide text-sky-600">
           {COPY.home.continueLabel}
         </Text>
         <Text className="text-lg font-semibold text-neutral-900">{project.name}</Text>
         {project.description ? (
-          <Text className="text-sm text-neutral-600" numberOfLines={2}>
+          <Text className="text-sm leading-5 text-neutral-500" numberOfLines={2}>
             {project.description}
           </Text>
         ) : null}

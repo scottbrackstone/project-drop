@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { COPY } from '@/constants/copy';
+import { SURFACES } from '@/constants/ui';
 import { useCopyText } from '@/hooks/useCopyText';
 import { formatDateTime } from '@/lib/utils/dates';
 import { formatNoteForCopy } from '@/lib/utils/noteText';
@@ -34,11 +35,13 @@ export function NoteCard({ note, onDelete, deleting }: NoteCardProps) {
   }
 
   return (
-    <Card className="gap-2">
+    <Card className="gap-3">
       <View className="flex-row items-center justify-between gap-2">
-        <Text className="text-xs text-neutral-500">{formatDateTime(note.createdAt)}</Text>
         <View className="flex-row items-center gap-2">
-          {note.source === 'voice' ? <Badge label={COPY.voice.sourceBadge} /> : null}
+          <Text className="text-xs text-neutral-400">{formatDateTime(note.createdAt)}</Text>
+          {note.source === 'voice' ? <Badge label={COPY.voice.sourceBadge} tone="success" /> : null}
+        </View>
+        <View className="flex-row items-center">
           <Button
             title={copied ? COPY.notes.actions.copied : COPY.notes.actions.copy}
             variant="ghost"
@@ -57,24 +60,24 @@ export function NoteCard({ note, onDelete, deleting }: NoteCardProps) {
         </View>
       </View>
       {note.summary ? (
-        <Text className="text-base font-semibold text-neutral-900">{note.summary}</Text>
+        <Text className="text-base font-semibold leading-5 text-neutral-900">{note.summary}</Text>
       ) : null}
       {note.cleanedNote ? (
         <Text
-          className="text-sm leading-5 text-neutral-600"
+          className="text-sm leading-6 text-neutral-600"
           numberOfLines={expanded ? undefined : 3}
         >
           {note.cleanedNote}
         </Text>
       ) : null}
       {expanded ? (
-        <View className="gap-2">
+        <View className="gap-3">
           {showTranscript ? (
-            <View className="gap-1">
-              <Text className="text-xs font-medium text-neutral-700">
+            <View className={`gap-1 ${SURFACES.transcript}`}>
+              <Text className="text-xs font-medium uppercase tracking-wide text-neutral-500">
                 {COPY.notes.transcriptLabel}
               </Text>
-              <Text className="text-sm leading-5 text-neutral-600">{note.rawTranscript}</Text>
+              <Text className="text-sm leading-6 text-neutral-600">{note.rawTranscript}</Text>
             </View>
           ) : null}
           <NoteTagList tags={note.tags} />
@@ -83,12 +86,14 @@ export function NoteCard({ note, onDelete, deleting }: NoteCardProps) {
         <NoteTagList tags={note.tags.slice(0, 3)} />
       ) : null}
       {hasLongContent || note.tags.length > 3 ? (
-        <Button
-          title={expanded ? COPY.notes.actions.showLess : COPY.notes.actions.showMore}
-          variant="ghost"
-          size="sm"
-          onPress={() => setExpanded((value) => !value)}
-        />
+        <View className="-mt-1 self-start">
+          <Button
+            title={expanded ? COPY.notes.actions.showLess : COPY.notes.actions.showMore}
+            variant="ghost"
+            size="sm"
+            onPress={() => setExpanded((value) => !value)}
+          />
+        </View>
       ) : null}
       {copyError ? <Text className="text-sm text-red-600">{copyError}</Text> : null}
     </Card>

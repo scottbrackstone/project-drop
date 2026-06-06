@@ -15,7 +15,10 @@ export function ProjectCaptureSection({
   error,
 }: ProjectCaptureSectionProps) {
   return (
-    <SectionCard title={COPY.projectDetail.captureTitle}>
+    <SectionCard
+      title={COPY.projectDetail.captureTitle}
+      description={COPY.projectDetail.captureDescription}
+    >
       <NoteCaptureForm onSubmit={onSubmit} submitting={submitting} error={error} />
     </SectionCard>
   );

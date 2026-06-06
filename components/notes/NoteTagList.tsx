@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Badge } from '@/components/ui/Badge';
 
@@ -10,7 +10,7 @@ export function NoteTagList({ tags }: NoteTagListProps) {
   if (tags.length === 0) return null;
 
   return (
-    <View className="flex-row flex-wrap gap-2">
+    <View className="flex-row flex-wrap gap-1.5">
       {tags.map((tag) => (
         <Badge key={tag} label={tag} tone="neutral" />
       ))}

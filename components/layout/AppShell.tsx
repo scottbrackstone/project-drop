@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,13 +9,28 @@ interface AppShellProps {
   title?: string;
   showBack?: boolean;
   subtitle?: string;
+  brand?: boolean;
+  headerRight?: ReactNode;
 }
 
-export function AppShell({ children, title, showBack = false, subtitle }: AppShellProps) {
+export function AppShell({
+  children,
+  title,
+  showBack = false,
+  subtitle,
+  brand = false,
+  headerRight,
+}: AppShellProps) {
   return (
     <SafeAreaView className="flex-1 bg-neutral-50" edges={['top', 'left', 'right']}>
-      <Header title={title} showBack={showBack} subtitle={subtitle} />
-      <View className="flex-1 px-4 py-4">{children}</View>
+      <Header
+        title={title}
+        showBack={showBack}
+        subtitle={subtitle}
+        brand={brand}
+        rightAction={headerRight}
+      />
+      <View className="flex-1 px-4 pt-4">{children}</View>
     </SafeAreaView>
   );
 }

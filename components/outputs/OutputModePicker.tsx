@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { getOutputModeDescription, getOutputModeLabel } from '@/constants/copy';
+import { SURFACES } from '@/constants/ui';
 import type { ProjectOutputMode } from '@/types/projectOutput';
 
 interface OutputModePickerProps {
@@ -27,16 +28,14 @@ export function OutputModePicker({
             accessibilityState={{ selected, disabled }}
             disabled={disabled}
             onPress={() => onChange(mode)}
-            className={`rounded-xl border px-4 py-3 ${
-              selected ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-200 bg-white'
-            } ${disabled ? 'opacity-50' : ''}`}
+            className={`${selected ? SURFACES.cardSelected : SURFACES.cardDefault} ${disabled ? 'opacity-50' : ''}`}
           >
             <Text
-              className={`text-sm font-semibold ${selected ? 'text-neutral-900' : 'text-neutral-800'}`}
+              className={`text-sm font-semibold leading-5 ${selected ? 'text-neutral-900' : 'text-neutral-800'}`}
             >
               {getOutputModeLabel(mode)}
             </Text>
-            <Text className="mt-1 text-xs leading-5 text-neutral-600">
+            <Text className="mt-1 text-xs leading-5 text-neutral-500">
               {getOutputModeDescription(mode)}
             </Text>
           </Pressable>

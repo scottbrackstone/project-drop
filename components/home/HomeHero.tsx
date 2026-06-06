@@ -8,11 +8,11 @@ export function HomeHero() {
 
   return (
     <View className="gap-3">
-      <Text className="text-3xl font-bold leading-tight text-neutral-900">
+      <Text className="text-2xl font-bold leading-tight text-neutral-900">
         {COPY.home.headline}
       </Text>
       <Text className="text-base leading-6 text-neutral-600">{COPY.home.body}</Text>
-      <Text className="text-sm text-neutral-500">
+      <Text className="text-xs text-neutral-400">
         Data mode: {formatDataModeLabel(provider)}
       </Text>
     </View>
