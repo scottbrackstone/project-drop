@@ -54,8 +54,10 @@ Deno.serve(async (req) => {
 
   try {
     const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      return jsonResponse({ error: 'Missing authorization header.' }, 401);
+    const apiKeyHeader = req.headers.get('apikey');
+
+    if (!authHeader && !apiKeyHeader) {
+      return jsonResponse({ error: 'Missing authorization credentials.' }, 401);
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
@@ -79,12 +81,14 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'Invalid storage path.' }, 400);
     }
 
-    const userClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { error: authError } = await userClient.auth.getUser();
-    if (authError) {
-      return jsonResponse({ error: 'Unauthorized request.' }, 401);
+    // MVP: allow anon-key invokes without a signed-in user. If a session exists,
+    // getUser() may resolve a user id for future path scoping; otherwise continue
+    // as anonymous (matches client upload paths under anonymous/).
+    if (authHeader) {
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      await userClient.auth.getUser();
     }
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
