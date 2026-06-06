@@ -43,6 +43,18 @@ export function mockLinkTagsToNote(
   return linkedNames;
 }
 
+export function mockUnlinkNoteTags(noteId: string): void {
+  noteTagLinks.delete(noteId);
+}
+
+export function mockPurgeTagsByProject(projectId: string): void {
+  for (const [id, tag] of tags.entries()) {
+    if (tag.projectId === projectId) {
+      tags.delete(id);
+    }
+  }
+}
+
 export function mockGetTagNamesForNote(noteId: string): string[] {
   const tagIds = noteTagLinks.get(noteId);
   if (!tagIds) return [];

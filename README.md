@@ -186,8 +186,8 @@ supabase db push
 - **Stage 4B:** Manual voice transcript + local audio metadata
 - **Stage 4C:** Transcription provider abstraction + mock transcript button
 - **Stage 4D:** Remote transcription via Supabase Storage + Edge Function
-- **Stage 5A (current):** Project outputs — mock formatters, mode/scope selection, reports persistence
-- **Stage 5B:** Delete note/project/task
+- **Stage 5A:** Project outputs — mock formatters, mode/scope selection, reports persistence
+- **Stage 5B (current):** Cleanup actions — complete task, delete note, delete project
 - **Stage 5C:** Real LLM output generation via Edge Function
 - **Stage 6:** Polish, tests, error handling
 
@@ -209,6 +209,29 @@ supabase db push
 4. Temporarily remove `MISTRAL_API_KEY` secret → tap transcribe → clear error shown (no mock fallback).
 5. Confirm no `MISTRAL_API_KEY` or `OPENAI_API_KEY` in client code or `EXPO_PUBLIC_*` env vars.
 6. Optional: set `TRANSCRIPTION_PROVIDER=openai` and `OPENAI_API_KEY` to verify legacy provider path.
+
+## Stage 5B manual test checklist
+
+### Mock mode
+
+1. Create project and add a note with a task phrase → open task appears.
+2. Tap **Done** on the task → task disappears from open tasks.
+3. Add two notes → delete one (confirm) → note removed from timeline.
+4. Cancel delete on another note → note remains.
+5. Scroll to **Danger zone** → **Delete project** (confirm) → returns to projects list.
+6. Confirm project is gone from the list.
+7. Confirm text notes, voice transcription, and Project Outputs still work.
+
+### Supabase mode
+
+1. Repeat complete task, delete note, and delete project flows.
+2. Verify in Table Editor:
+   - completed task has `status = 'done'`
+   - deleted note row and its `note_tags` are gone
+   - tasks/decisions from deleted note may have `note_id = null`
+   - deleted project cascades related rows
+
+No new migrations are required — existing schema cascades handle cleanup.
 
 ## Stage 5A manual test checklist
 

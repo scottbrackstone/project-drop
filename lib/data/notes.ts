@@ -1,7 +1,12 @@
 import { processNote } from '@/lib/ai/processNote';
-import { mockCreateTextNote, mockListNotesByProject } from '@/lib/data/mock/notes';
+import {
+  mockCreateTextNote,
+  mockDeleteNote,
+  mockListNotesByProject,
+} from '@/lib/data/mock/notes';
 import {
   supabaseCreateTextNote,
+  supabaseDeleteNote,
   supabaseListNotesByProject,
 } from '@/lib/data/supabase/notes';
 import { withDataProvider } from '@/lib/data/withProvider';
@@ -26,5 +31,12 @@ export async function createTextNote(
   return withDataProvider(
     () => mockCreateTextNote(projectId, rawTranscript, processed, options),
     () => supabaseCreateTextNote(projectId, rawTranscript, processed, options),
+  );
+}
+
+export async function deleteNote(noteId: string): Promise<void> {
+  return withDataProvider(
+    () => mockDeleteNote(noteId),
+    () => supabaseDeleteNote(noteId),
   );
 }

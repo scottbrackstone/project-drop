@@ -38,3 +38,15 @@ export async function supabaseInsertTasks(
   if (error) throw toAppError(error);
   return (data as TaskRow[]).map(mapTaskRow);
 }
+
+export async function supabaseCompleteTask(taskId: string): Promise<Task> {
+  const { data, error } = await getSupabaseClient()
+    .from('tasks')
+    .update({ status: 'done' })
+    .eq('id', taskId)
+    .select('*')
+    .single();
+
+  if (error) throw toAppError(error);
+  return mapTaskRow(data as TaskRow);
+}

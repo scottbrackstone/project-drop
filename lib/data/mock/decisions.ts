@@ -32,3 +32,19 @@ export function mockInsertDecisions(
 
   return created;
 }
+
+export function mockClearNoteIdFromDecisions(noteId: string): void {
+  for (const decision of decisions.values()) {
+    if (decision.noteId === noteId) {
+      decisions.set(decision.id, { ...decision, noteId: null });
+    }
+  }
+}
+
+export function mockPurgeDecisionsByProject(projectId: string): void {
+  for (const [id, decision] of decisions.entries()) {
+    if (decision.projectId === projectId) {
+      decisions.delete(id);
+    }
+  }
+}

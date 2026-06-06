@@ -36,3 +36,11 @@ export function mockCreateProjectOutput(input: CreateProjectOutputInput): Projec
   reports.set(output.id, output);
   return output;
 }
+
+export function mockPurgeReportsByProject(projectId: string): void {
+  for (const [id, report] of reports.entries()) {
+    if (report.projectId === projectId) {
+      reports.delete(id);
+    }
+  }
+}

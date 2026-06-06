@@ -1,3 +1,5 @@
+import { mockPurgeProject } from '@/lib/data/mock/purgeProject';
+import { AppError } from '@/lib/utils/errors';
 import type { CreateProjectInput, Project } from '@/types/project';
 import { generateId } from '@/lib/utils/id';
 import { validateProjectDescription, validateProjectName } from '@/lib/utils/validation';
@@ -28,6 +30,15 @@ export function mockCreateProject(input: CreateProjectInput): Project {
 
   projects.set(project.id, project);
   return project;
+}
+
+export function mockDeleteProject(projectId: string): void {
+  if (!projects.has(projectId)) {
+    throw new AppError('Project not found.');
+  }
+
+  mockPurgeProject(projectId);
+  projects.delete(projectId);
 }
 
 export function mockResetProjects(): void {

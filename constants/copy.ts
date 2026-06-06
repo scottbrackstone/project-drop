@@ -40,7 +40,25 @@ export const COPY = {
     notesLoading: 'Loading notes…',
     tasksLoading: 'Loading tasks…',
     projectOutputsButton: 'Project outputs',
+    completeTask: 'Done',
+    deleteNote: 'Delete',
     textDivider: 'Or type a note',
+  },
+  deleteNote: {
+    title: 'Delete note?',
+    message: 'This note will be removed from the project timeline.',
+    confirm: 'Delete',
+  },
+  deleteProject: {
+    title: 'Delete project?',
+    message: (projectName: string) =>
+      `Delete "${projectName}"? This permanently removes all notes, tasks, decisions, tags, and outputs. This cannot be undone.`,
+    confirm: 'Delete project',
+    sectionTitle: 'Danger zone',
+    button: 'Delete project',
+  },
+  common: {
+    cancel: 'Cancel',
   },
   outputs: {
     title: 'Project outputs',

@@ -9,9 +9,11 @@ import type { NoteWithTags } from '@/types/note';
 interface NoteTimelineProps {
   notes: NoteWithTags[];
   loading: boolean;
+  deletingNoteId: string | null;
+  onDeleteNote: (noteId: string) => void;
 }
 
-export function NoteTimeline({ notes, loading }: NoteTimelineProps) {
+export function NoteTimeline({ notes, loading, deletingNoteId, onDeleteNote }: NoteTimelineProps) {
   if (loading) {
     return <LoadingSpinner label={COPY.projectDetail.notesLoading} />;
   }
@@ -23,7 +25,12 @@ export function NoteTimeline({ notes, loading }: NoteTimelineProps) {
   return (
     <View className="gap-3">
       {notes.map((note) => (
-        <NoteCard key={note.id} note={note} />
+        <NoteCard
+          key={note.id}
+          note={note}
+          onDelete={onDeleteNote}
+          deleting={deletingNoteId === note.id}
+        />
       ))}
     </View>
   );

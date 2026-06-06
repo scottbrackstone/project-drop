@@ -87,3 +87,9 @@ export async function supabaseCreateTextNote(
     decisionCount: createdDecisions.length,
   };
 }
+
+export async function supabaseDeleteNote(noteId: string): Promise<void> {
+  const { error } = await getSupabaseClient().from('notes').delete().eq('id', noteId);
+
+  if (error) throw toAppError(error);
+}

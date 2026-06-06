@@ -1,10 +1,12 @@
 import {
   mockCreateProject,
+  mockDeleteProject,
   mockGetProject,
   mockListProjects,
 } from '@/lib/data/mock/projects';
 import {
   supabaseCreateProject,
+  supabaseDeleteProject,
   supabaseGetProject,
   supabaseListProjects,
 } from '@/lib/data/supabase/projects';
@@ -39,5 +41,12 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
   return withDataProvider(
     () => mockCreateProject(normalized),
     () => supabaseCreateProject(normalized),
+  );
+}
+
+export async function deleteProject(projectId: string): Promise<void> {
+  return withDataProvider(
+    () => mockDeleteProject(projectId),
+    () => supabaseDeleteProject(projectId),
   );
 }

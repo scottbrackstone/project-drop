@@ -1,6 +1,11 @@
-import { mockInsertDecisions } from '@/lib/data/mock/decisions';
-import { mockGetTagNamesForNote, mockLinkTagsToNote } from '@/lib/data/mock/tags';
-import { mockInsertTasks } from '@/lib/data/mock/tasks';
+import { mockClearNoteIdFromDecisions, mockInsertDecisions } from '@/lib/data/mock/decisions';
+import {
+  mockGetTagNamesForNote,
+  mockLinkTagsToNote,
+  mockUnlinkNoteTags,
+} from '@/lib/data/mock/tags';
+import { mockClearNoteIdFromTasks, mockInsertTasks } from '@/lib/data/mock/tasks';
+import { AppError } from '@/lib/utils/errors';
 import { getOptionalUserId } from '@/lib/supabase/auth';
 import { toDueDateOrNull } from '@/lib/utils/dates';
 import { generateId } from '@/lib/utils/id';
@@ -76,4 +81,24 @@ export async function mockCreateTextNote(
     taskCount: createdTasks.length,
     decisionCount: createdDecisions.length,
   };
+}
+
+export function mockDeleteNote(noteId: string): void {
+  if (!notes.has(noteId)) {
+    throw new AppError('Note not found.');
+  }
+
+  mockUnlinkNoteTags(noteId);
+  mockClearNoteIdFromTasks(noteId);
+  mockClearNoteIdFromDecisions(noteId);
+  notes.delete(noteId);
+}
+
+export function mockPurgeNotesByProject(projectId: string): void {
+  for (const [id, note] of notes.entries()) {
+    if (note.projectId === projectId) {
+      mockUnlinkNoteTags(id);
+      notes.delete(id);
+    }
+  }
 }
