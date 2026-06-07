@@ -6,6 +6,7 @@ import { ProjectList } from '@/components/projects/ProjectList';
 import { Button } from '@/components/ui/Button';
 import { COPY } from '@/constants/copy';
 import { ROUTES } from '@/constants/routes';
+import { useProjectNavigation } from '@/hooks/useProjectNavigation';
 import type { ProjectWithStats } from '@/types/project';
 
 interface ProjectsScreenContentProps {
@@ -24,6 +25,7 @@ export function ProjectsScreenContent({
   onRefresh,
 }: ProjectsScreenContentProps) {
   const router = useRouter();
+  const { openProject } = useProjectNavigation();
   const navigateToCreate = () => router.push(ROUTES.projectsNew);
 
   return (
@@ -36,6 +38,7 @@ export function ProjectsScreenContent({
         loading={loading && !refreshing}
         error={error}
         onCreatePress={navigateToCreate}
+        onProjectPress={openProject}
       />
     </ScreenScroll>
   );

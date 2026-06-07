@@ -11,9 +11,16 @@ interface ProjectListProps {
   loading: boolean;
   error: string | null;
   onCreatePress: () => void;
+  onProjectPress: (projectId: string) => void;
 }
 
-export function ProjectList({ projects, loading, error, onCreatePress }: ProjectListProps) {
+export function ProjectList({
+  projects,
+  loading,
+  error,
+  onCreatePress,
+  onProjectPress,
+}: ProjectListProps) {
   if (loading) {
     return <LoadingSpinner label={COPY.projects.loading} />;
   }
@@ -43,7 +50,11 @@ export function ProjectList({ projects, loading, error, onCreatePress }: Project
   return (
     <View className="gap-3">
       {projects.map((project) => (
-        <ProjectCard key={project.id} project={project} />
+        <ProjectCard
+          key={project.id}
+          project={project}
+          onPress={() => onProjectPress(project.id)}
+        />
       ))}
     </View>
   );
