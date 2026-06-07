@@ -47,7 +47,8 @@
           "microphonePermission": "Allow ProjectDrop to record voice notes for your projects.",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
