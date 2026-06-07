@@ -14,7 +14,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onPress }: ProjectCardProps) {
   return (
     <Pressable accessibilityRole="button" onPress={onPress}>
-      <Card className="gap-3 active:bg-neutral-50">
+      <Card className="gap-4 active:bg-neutral-50">
         <View className="flex-row items-start justify-between gap-3">
           <Text className="flex-1 text-lg font-semibold text-neutral-900">{project.name}</Text>
           <Badge label={project.status} />

@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { SURFACES } from '@/constants/ui';
+import { SURFACE_PADDING, SURFACES } from '@/constants/ui';
 
 interface SettingsMenuItemProps {
   title: string;
@@ -14,11 +14,12 @@ export function SettingsMenuItem({ title, description, onPress }: SettingsMenuIt
       accessibilityRole="button"
       onPress={onPress}
       className={SURFACES.settingsRow}
+      style={SURFACE_PADDING.row}
     >
-      <View className="flex-row items-center justify-between gap-3">
-        <View className="flex-1 gap-1">
+      <View className="flex-row items-center justify-between gap-4">
+        <View className="flex-1 gap-1.5">
           <Text className="text-base font-semibold text-neutral-900">{title}</Text>
-          <Text className="text-sm leading-5 text-neutral-500">{description}</Text>
+          <Text className="text-sm leading-6 text-neutral-500">{description}</Text>
         </View>
         <Text className="text-xl text-neutral-300">›</Text>
       </View>

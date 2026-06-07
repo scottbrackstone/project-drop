@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Header } from '@/components/layout/Header';
+import { SPACING } from '@/constants/theme';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -30,7 +31,12 @@ export function AppShell({
         brand={brand}
         rightAction={headerRight}
       />
-      <View className="flex-1 px-5 pt-4">{children}</View>
+      <View
+        className="flex-1 pt-4"
+        style={{ paddingHorizontal: SPACING.screenPadding }}
+      >
+        {children}
+      </View>
     </SafeAreaView>
   );
 }

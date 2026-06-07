@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 
 import { ProjectDropWordmark } from '@/components/brand/ProjectDropWordmark';
 import { COPY } from '@/constants/copy';
-import { APP_NAME } from '@/constants/theme';
+import { APP_NAME, SPACING } from '@/constants/theme';
 
 interface HeaderProps {
   title?: string;
@@ -24,7 +24,10 @@ export function Header({
   const router = useRouter();
 
   return (
-    <View className="border-b border-neutral-100 bg-white px-5 py-4">
+    <View
+      className="border-b border-neutral-100 bg-white py-4"
+      style={{ paddingHorizontal: SPACING.screenPadding }}
+    >
       <View className="flex-row items-start justify-between gap-3">
         <View className="min-w-0 flex-1">
           {showBack ? (
@@ -42,7 +45,7 @@ export function Header({
             <>
               <Text className="text-2xl font-bold text-neutral-900">{title}</Text>
               {subtitle ? (
-                <Text className="mt-1 text-sm leading-5 text-neutral-500">{subtitle}</Text>
+                <Text className="mt-1.5 text-sm leading-6 text-neutral-500">{subtitle}</Text>
               ) : null}
             </>
           )}

@@ -2,7 +2,7 @@ import { Text, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { COPY } from '@/constants/copy';
-import { SURFACES } from '@/constants/ui';
+import { SURFACE_PADDING, SURFACES } from '@/constants/ui';
 
 interface ProjectDeleteSectionProps {
   projectName: string;
@@ -18,7 +18,7 @@ export function ProjectDeleteSection({
   onDelete,
 }: ProjectDeleteSectionProps) {
   return (
-    <View className={`${SURFACES.dangerZone} gap-4`}>
+    <View className={`${SURFACES.dangerZone} gap-4`} style={SURFACE_PADDING.card}>
       <Text className="text-base font-semibold text-red-900">{COPY.deleteProject.sectionTitle}</Text>
       <Text className="text-sm leading-6 text-neutral-600">
         {COPY.deleteProject.sectionDescription}

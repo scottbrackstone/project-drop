@@ -7,8 +7,8 @@ interface ProjectDropLogoProps {
 }
 
 function DropMark({ size }: { size: number }) {
-  const width = size * 0.38;
-  const height = size * 0.48;
+  const width = size * 0.36;
+  const height = size * 0.46;
 
   return (
     <View
@@ -25,26 +25,59 @@ function DropMark({ size }: { size: number }) {
   );
 }
 
-export function ProjectDropLogo({ size = 48 }: ProjectDropLogoProps) {
-  const radius = Math.round(size * 0.26);
-  const accentHeight = Math.max(3, Math.round(size * 0.06));
+export function ProjectDropLogo({ size = 52 }: ProjectDropLogoProps) {
+  const radius = Math.round(size * 0.24);
+  const ringSize = size + 6;
 
   return (
     <View
-      className="overflow-hidden border border-neutral-200 bg-white"
       style={{
-        width: size,
-        height: size,
-        borderRadius: radius,
-        shadowColor: COLORS.primary,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 6,
-        elevation: 2,
+        width: ringSize,
+        height: ringSize,
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      <View style={{ height: accentHeight, backgroundColor: COLORS.accentMuted }} />
-      <View className="flex-1 items-center justify-center">
+      <View
+        style={{
+          position: 'absolute',
+          width: ringSize,
+          height: ringSize,
+          borderRadius: radius + 3,
+          backgroundColor: COLORS.accentLight,
+          borderWidth: 1,
+          borderColor: COLORS.accentMuted,
+          opacity: 0.35,
+        }}
+      />
+      <View
+        style={{
+          width: size,
+          height: size,
+          borderRadius: radius,
+          backgroundColor: COLORS.white,
+          borderWidth: 1,
+          borderColor: COLORS.borderSubtle,
+          overflow: 'hidden',
+          alignItems: 'center',
+          justifyContent: 'center',
+          shadowColor: COLORS.primary,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 3,
+        }}
+      >
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: Math.max(4, Math.round(size * 0.08)),
+            backgroundColor: COLORS.accentMuted,
+          }}
+        />
         <DropMark size={size} />
       </View>
     </View>

@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { COPY } from '@/constants/copy';
-import { SURFACES } from '@/constants/ui';
+import { SURFACE_PADDING, SURFACES } from '@/constants/ui';
 import { useCopyText } from '@/hooks/useCopyText';
 import { formatDateTime } from '@/lib/utils/dates';
 import { formatNoteForCopy } from '@/lib/utils/noteText';
@@ -35,7 +35,7 @@ export function NoteCard({ note, onDelete, deleting }: NoteCardProps) {
   }
 
   return (
-    <Card className="gap-3">
+    <Card className="gap-4">
       <View className="flex-row items-center justify-between gap-2">
         <View className="flex-row items-center gap-2">
           <Text className="text-xs text-neutral-400">{formatDateTime(note.createdAt)}</Text>
@@ -73,7 +73,7 @@ export function NoteCard({ note, onDelete, deleting }: NoteCardProps) {
       {expanded ? (
         <View className="gap-3">
           {showTranscript ? (
-            <View className={`gap-1 ${SURFACES.transcript}`}>
+            <View className={`gap-2 ${SURFACES.transcript}`} style={SURFACE_PADDING.inset}>
               <Text className="text-xs font-medium uppercase tracking-wide text-neutral-500">
                 {COPY.notes.transcriptLabel}
               </Text>

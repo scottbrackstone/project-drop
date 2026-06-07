@@ -11,30 +11,50 @@ interface ProjectDropWordmarkProps {
 }
 
 const logoSizes: Record<WordmarkSize, number> = {
-  sm: 40,
-  md: 48,
-  lg: 56,
+  sm: 44,
+  md: 52,
+  lg: 60,
 };
 
 const titleSizes: Record<WordmarkSize, number> = {
-  sm: 18,
-  md: 24,
-  lg: 30,
+  sm: 19,
+  md: 26,
+  lg: 32,
+};
+
+const taglineSizes: Record<WordmarkSize, number> = {
+  sm: 13,
+  md: 14,
+  lg: 15,
 };
 
 export function ProjectDropWordmark({ showTagline = false, size = 'md' }: ProjectDropWordmarkProps) {
   const titleSize = titleSizes[size];
+  const taglineSize = taglineSizes[size];
+  const logoSize = logoSizes[size];
+  const textTopInset = Math.round(logoSize * 0.1);
 
   return (
-    <View className="flex-row items-center gap-3.5">
-      <ProjectDropLogo size={logoSizes[size]} />
-      <View className="flex-1 gap-1">
-        <Text style={{ fontSize: titleSize, lineHeight: titleSize * 1.15 }}>
+    <View className="flex-row items-start gap-4">
+      <ProjectDropLogo size={logoSize} />
+      <View className="flex-1 gap-2" style={{ paddingTop: textTopInset }}>
+        <Text
+          style={{
+            fontSize: titleSize,
+            lineHeight: titleSize * 1.2,
+            letterSpacing: -0.5,
+          }}
+        >
           <Text className="font-bold text-neutral-900">Project</Text>
-          <Text className="font-bold text-sky-600">Drop</Text>
+          <Text className="font-bold text-sky-700">Drop</Text>
         </Text>
         {showTagline ? (
-          <Text className="text-sm leading-5 tracking-wide text-neutral-500">{COPY.tagline}</Text>
+          <Text
+            className="text-neutral-500"
+            style={{ fontSize: taglineSize, lineHeight: taglineSize * 1.5 }}
+          >
+            {COPY.tagline}
+          </Text>
         ) : null}
       </View>
     </View>

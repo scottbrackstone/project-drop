@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { getOutputModeDescription, getOutputModeLabel } from '@/constants/copy';
-import { SURFACES } from '@/constants/ui';
+import { SURFACE_PADDING, SURFACES } from '@/constants/ui';
 import type { ProjectOutputMode } from '@/types/projectOutput';
 
 interface OutputModePickerProps {
@@ -18,7 +18,7 @@ export function OutputModePicker({
   disabled = false,
 }: OutputModePickerProps) {
   return (
-    <View className="gap-2">
+    <View className="gap-3">
       {modes.map((mode) => {
         const selected = mode === value;
         return (
@@ -29,13 +29,14 @@ export function OutputModePicker({
             disabled={disabled}
             onPress={() => onChange(mode)}
             className={`${selected ? SURFACES.cardSelected : SURFACES.cardDefault} ${disabled ? 'opacity-50' : ''}`}
+            style={SURFACE_PADDING.row}
           >
             <Text
-              className={`text-sm font-semibold leading-5 ${selected ? 'text-neutral-900' : 'text-neutral-800'}`}
+              className={`text-sm font-semibold leading-6 ${selected ? 'text-neutral-900' : 'text-neutral-800'}`}
             >
               {getOutputModeLabel(mode)}
             </Text>
-            <Text className="mt-1 text-xs leading-5 text-neutral-500">
+            <Text className="mt-1.5 text-xs leading-5 text-neutral-500">
               {getOutputModeDescription(mode)}
             </Text>
           </Pressable>
